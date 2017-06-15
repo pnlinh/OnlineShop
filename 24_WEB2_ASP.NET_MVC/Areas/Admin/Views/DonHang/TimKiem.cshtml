@@ -1,0 +1,144 @@
+﻿@model IEnumerable<_24_WEB2_ASP.NET_MVC.Models.HoaDon>
+
+@{
+    ViewBag.Title = "TimKiem";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section name
+{
+    Đơn hàng
+    <small>Danh sách</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Đơn hàng", "DanhSach", "DonHang")</li>
+    <li class="active">Danh sách</li>
+}
+
+<div class="col-xs-12">
+    <div class="box">
+        <div class="box-header">
+            <div class="row" style="padding-bottom: 15px; padding-top: 10px;">
+                <div class="col-lg-6 col-md-6">
+
+                </div>
+
+                <div class="col-lg-6">
+                    @using (Html.BeginForm("TimKiem", "DonHang", FormMethod.Get))
+                    {
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="tukhoa" name="q" placeholder="Từ khóa">
+                            <span class="input-group-btn">
+                                <button id="timkiem" class="btn btn-default" type="submit">Tìm kiếm</button>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="box-body">
+                <h3 style="text-align: center;">Đơn hàng bạn tìm không tồn tại !</h3>
+            </div>
+        }
+        else
+        {
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="5%">ID</th>
+                            <th>Tên khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+                            <th style="/*width: 100px;*/">Trạng thái</th>
+                            <th width="15%">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.ID</td>
+                            <td>@item.TaiKhoan.Name</td>
+                            <td>@item.NgayDat</td>
+                            <td>@item.SoLuong</td>
+                            <td>@string.Format("{0:N0}", @item.TongTien) &#x20ab;</td>
+                            <td>
+                                @if (item.TrangThai == 1)
+                                {
+                                <span class="badge bg-yellow">Chưa giao</span>
+                                }
+                                else if (item.TrangThai == 2)
+                                {
+                                <span class="badge bg-lime">Đang giao</span>
+                                }
+                                else if (item.TrangThai == 3)
+                                {
+                                <span class="badge bg-green">Đã thanh toán</span>
+                                }
+                                else
+                                {
+                                <span class="badge bg-red">Đã hủy</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("ChiTiet", "DonHang", new {id=@item.ID })">Xem chi tiết</a>
+
+                                <a @if (item.TrangThai == 3) { @Html.Raw("class='tat'")  } onclick="return xacNhanXoa('Bạn có muốn xóa không ?')" href="@Url.Action("Xoa", "DonHang", new {id = @item.ID})" style="margin-left: 10px;">
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-0">
+                        <ul class="pagination">
+                            @if (ViewBag.curPage != 1)
+                            {
+                                <li>
+                                    <a href="?q=@ViewBag.q&page=@(ViewBag.curPage - 1)">«</a>
+                                </li>
+                            }
+
+                            @for (int i = 1; i <= ViewBag.totalPage; i++)
+                            {
+                                if (ViewBag.curPage == i)
+                                {
+                                    <li class="active">
+                                        <a href="">@i</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="?q=@ViewBag.q&page=@i">@i</a>
+                                    </li>
+                                }
+                            }
+                            @if (ViewBag.curPage != ViewBag.totalPage)
+                            {
+                                <li>
+                                    <a href="?q=@ViewBag.q&page=@(ViewBag.curPage + 1)">»</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "ThanhCong";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .section-padding-top {
+        padding-top: 90px;
+    }
+    .complete-title > p {
+        background: #dff0d8 none repeat scroll 0 0;
+        color: #3c763d;
+        font-size: 18px;
+        line-height: 50px;
+        margin-bottom: 60px;
+        border-radius:5px;
+        padding:10px;
+    }
+    .order-no ul li {
+        border: 1px solid #ccc;
+        /* border-right: 0; */
+        float: left;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 35px 0;
+        width: 30%;
+    }
+    .order-no span {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 15px;
+    }
+    .order-complete .place-text {
+        border: 0 none;
+        padding: 0;
+    }strong{
+         color:#333;
+         font-weight:bold;
+         text-transform:uppercase;
+     }
+    .place-text table {
+        border: 0 none;
+        width: 100%;
+    }
+        .place-text table thead tr th, .place-text table thead tr td {
+            background: transparent none repeat scroll 0 0;
+            border-bottom: 1px solid #ccc;
+            padding: 15px;
+            text-align: left;
+            color: #333;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+    .place-text table {
+        border: 0 none;
+    }
+</style>
+<section class="pages  order-complete section-padding-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-8 col-sm-offset-2 text-center">
+                <div class="complete-title">
+                    
+                    <p><i class="fa fa-check-circle fa-2x" aria-hidden="true"></i><br/>Giỏ hàng của bạn đã thanh toán thành công. Hãy vào tài khoản để xem lại chi tiết hóa đơn. Nếu bạn muốn mua thêm sản phẩm hãy về trang chủ để có thể chọn cho mình nhé!</p>
+                </div>
+                <div class="order-no  col-sm-offset-1">
+                    <ul>
+                        <li>Mã hóa đơn <span>@Model.HoaDon.ID</span></li>
+                        <li>Ngày<span>@Model.HoaDon.NgayDat</span></li>
+                        <li>Tổng<span>@string.Format("{0:n0}", Model.HoaDon.TongTien) &#x20ab</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

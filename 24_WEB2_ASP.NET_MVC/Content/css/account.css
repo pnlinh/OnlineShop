@@ -1,0 +1,204 @@
+﻿.mt-50 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.mb-50 {
+    margin-bottom: 50px;
+}
+
+.account .account-title h1 {
+    border-bottom: 1px solid #ddd;
+    color: #000;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 33px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.section-title h2 {
+    color: #000;
+    font-size: 18px;
+    text-transform: uppercase;
+    padding: 6px 0;
+    position: relative;
+    display: inline-block;
+    margin: 0 0 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}
+
+    .section-title h2::before {
+        background: #aaa none repeat scroll 0 0;
+        bottom: -6px;
+        content: "";
+        height: 2px;
+        left: 0;
+        position: absolute;
+        width: 20%;
+    }
+
+.login-area form label, .register-area form label {
+    color: #4d4d4d;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+    .login-area form label span, .register-area form label span {
+        color: #f00;
+    }
+
+.login-area form input, .register-area form input {
+    border: 1px solid #ddd;
+    display: block;
+    padding: 10px 10px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.login-area form button, .register-area form button, .register-area button {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: 2px solid #ddd;
+    font-size: 16px;
+    padding: 10px 30px;
+    text-transform: uppercase;
+    transition: .3s;
+}
+
+.register-area button {
+    margin-top: 30px;
+    margin-left: 25px;
+}
+
+.login-area a {
+    color: #333;
+    margin-left: 20px;
+    transition: all 0.3s ease 0s;
+    text-decoration: none;
+}
+
+.checkbox {
+    margin-bottom: 0;
+}
+
+.radio, .checkbox {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    /*margin-bottom: 10px;*/
+}
+
+.mt-50 button:hover {
+    background: black;
+    color: white;
+    /*border:none;*/
+}
+
+.login-area {
+    border: 1px solid #8c8c8c;
+    padding: 20px 20px;
+}
+
+.info-register {
+    font-size: 16px;
+    margin-top: 10px;
+    margin-left: 25px;
+}
+
+    .info-register i {
+        margin-right: 5px;
+    }
+
+.register-area {
+    border: 1px solid #8c8c8c;
+    padding: 39px 20px;
+}
+
+
+.order_details.nrbdtl {
+    margin-bottom: 22px;
+}
+
+.order_details {
+    border: 1px solid #ccc;
+}
+
+    .order_details > h4 {
+        background: #ddd none repeat scroll 0 0;
+        border-bottom: 1px solid #ccc;
+        font-family: raleway;
+        padding: 16px;
+    }
+
+h4 {
+    font-size: 20px;
+    margin: 0 0 5px;
+    line-height: 1.35;
+    color: #252525;
+    font-weight: 700;
+    /*font-family: Montserrat,sans-serif;*/
+    text-transform: uppercase;
+}
+
+.nrbdtl .table-wrap {
+    padding: 25px 37px;
+    max-width: 100%;
+    overflow: auto;
+}
+
+table.full {
+    width: 100%;
+    margin-bottom: 1em;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th, td {
+    text-align: left;
+    padding: 15px;
+    border: 1px solid #e5e5e5;
+}
+
+th {
+    font-weight: bold;
+}
+
+.view-order {
+    text-align: center;
+}
+
+.full button {
+    background: black none repeat scroll 0 0;
+    border: 0 none;
+    border-radius: 0;
+    color: white;
+    display: inline-block;
+    font-size: 11px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 50px;
+    text-align: center;
+    transition: all 0.4s ease 0s;
+    vertical-align: top;
+}
+
+    .full button:hover {
+        background: #c06b81;
+    }
+
+.order-history h1 {
+    text-transform: uppercase;
+    color: black;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.order-history {
+    margin-top: 50px;
+}

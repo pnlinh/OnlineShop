@@ -1,0 +1,692 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "ChiTiet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <head>
+    <meta property="og:url" content="http://k2team.net/SanPham/ChiTiet/@Model.Details.ID" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Your Website Title" />
+    <meta property="og:description" content="Your description" />
+    <meta property="og:image" content="http://www.your-domain.com/path/image.jpg" />
+    <style>
+        .details-product {
+            background: #363636 none repeat scroll 0 0;
+            border: 0 none;
+            color: white;
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            height: 35px;
+            line-height: 35px;
+            padding: 0 15px;
+            position: relative;
+            text-align: center;
+            text-transform: uppercase;
+            transition: all 300ms ease-in 0s;
+        }
+        .product-img img {
+            height: 385px;
+        }
+
+        .shop-1-product-tab .tabs {
+            margin-bottom: 15px;
+        }
+    </style>
+    <script>
+        function hide() {
+            var modal = document.getElementById('add-Modal');
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var modal = document.getElementById('add-Modal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        $(document).ready(function () {
+            $('.details-product').on('click', function () {
+                var getItemId = parseInt($(this).attr('id').replace(/detail_/, ''));
+
+                console.log(getItemId);
+                //var getUserName = $('.divName').html();
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/AddCart',
+                    dataType: 'json',
+                    data: JSON.stringify({ ItemId: getItemId }),
+                    success: function (data) {
+                        $('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        $('.name-product-addcart').text(data.TenSanPham);
+                        $('#price-product-addcart').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+                        var span = $(".countcart");
+                        span.html(parseInt(span.html()) + 1);
+                        $('#add-Modal').css("display", "block");
+                        loadHeaderCart();
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+                return false;
+            });
+        });
+
+  
+    
+        $(document).ready(function () {
+            $('.modal-product').on('click', function () {
+                var UpdateItem = parseInt($(this).attr('id').replace(/quick_view_/, ''));
+                //var getUserName = $('.divName').html();
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/loadModal',
+                    dataType: 'json',
+                    data: JSON.stringify({ id: UpdateItem }),
+                    success: function (data) {
+                        //var span = $(".countcart");
+                        //span.html(parseInt(span.html()) + 1);
+                        $("#modal-name").text(data.TenSanPham);
+                        $('#modal-procer').text(data.TenNhaSanXuat);
+                        $('#modal-option').text(data.TenLoaiSanPham);
+                        $('.price-box1').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());;
+                        $("#modal-details").text(data.MoTa);
+                        $("#modal-quantity").text(data.SoLuongTon);
+                        $('.exclusive').attr('id', 'modal_' + data.ID);
+                        $('#img-modal').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        if (data.SoLuongTon <= 0) {
+                            $('#modal_' + data.ID + '').attr('disabled', "disabled");
+                            $('#modal_' + data.ID + '').css("cursor", "not-allowed");
+                        }
+                        if (data.SoLuongTon > 0) {
+                            $('#modal_' + data.ID + '').removeAttr('disabled');
+                            $('#modal_' + data.ID + '').css("cursor", "pointer");
+                        }
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('.exclusive').on('click', function () {
+                var getItemId = parseInt($(this).attr('id').replace(/modal_/, ''));
+
+                console.log(getItemId);
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/AddCart',
+                    dataType: 'json',
+                    data: JSON.stringify({ ItemId: getItemId }),
+                    success: function (data) {
+                        $('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        $('.name-product-addcart').text(data.TenSanPham);
+                        $('#price-product-addcart').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+                        var span = $(".countcart");
+                        span.html(parseInt(span.html()) + 1);
+                        $('#add-Modal').css("display", "block");
+                        $('#add-Modal').css("z-index", '100000000');
+                        loadHeaderCart();
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+                return false;
+            });
+        });
+
+
+        $(document).ready(function () {
+            $('.btn-adlist').on('click', function () {
+                var getItemId = parseInt($(this).attr('id').replace(/add-wishlist-/, ''));
+
+                //var getUserName = $('.divName').html();
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/AddWihsList',
+                    dataType: 'json',
+                    data: JSON.stringify({ id: getItemId }),
+                    success: function (data) {
+                        console.log(data);
+                        //$('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        //$('.name-product-addcart').text(data.TenSanPham);
+                        //$('#price-product-addcart').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+                        var span = $(".countwish");
+                        span.html(parseInt(span.html()) + 1);
+                        //$('#add-Modal').css("display", "block");
+                        //loadHeaderCart();
+                        //loadNumberCart();
+
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('.divAddCart').on('click', function () {
+                var getItemId = parseInt($(this).closest('a').prop('id'));
+
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/AddCart',
+                    dataType: 'json',
+                    data: JSON.stringify({ ItemId: getItemId }),
+                    success: function (data) {
+                        $('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        $('.name-product-addcart').text(data.TenSanPham);
+                        $('#price-product-addcart').text(data.Gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        );
+                        var span = $(".countcart");
+                        span.html(parseInt(span.html()) + 1);
+                        $('#add-Modal').css("display", "block");
+                        loadHeaderCart();
+                        loadNumberCart();
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+                return false;
+            });
+        });
+   
+    </script>
+    </head>
+}
+
+
+
+<div class="shop-1-area">
+    
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html" title="Return to Home">
+                <i class="icon-home"></i>
+            </a>
+            <span class="navigation-pipe">&gt;</span>
+            <span class="navigation-page">
+                <a href="#" title="Furniture ">
+                    <span>Xem chi tiết </span>
+                </a>
+                <span class="navigation-pipe nav-pipe-2">&gt;</span>
+               @Html.DisplayFor(m => m.Details.TenSanPham)
+            </span>
+        </div>
+        <div class="row">
+            <div class="col-md-5 col-sm-6 col-xs-12">
+                <div class="picture-tab">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active fade in" id="picture-1">
+                            <div class="single-product">
+                                <div class="product-img ex1">
+                                    <a href="#">
+                                        <img src="~/Assets/HinhAnh/@Model.Details.ID/@Model.Details.HinhAnh" alt="" style="height:500px;">
+                                    </a>
+                                    <span class="new">new</span>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 col-sm-6 col-xs-12 shop-content">
+                <h1>@Html.DisplayFor(m => m.Details.TenSanPham)</h1>
+               
+                <p class="reference">
+                    <label>Nhà sản xuất: </label>
+                   
+                        <span>@Model.Details.NhaSanXuat.TenNhaSanXuat</span>
+                         
+                </p>
+                <p class="condition">
+                    <label>Danh mục: </label>
+                    <span> @Model.Details.Danh_Muc.TenDanhMuc</span>
+                </p>
+               
+                <p class="condition">
+                    <label>Thể loại:</label>
+                    <a href="~/MuaSam/SanPham/@Model.Details.LoaiSanPham.ID">
+                        <span>@Model.Details.LoaiSanPham.TenLoaiSanPham</span>
+                        </a>
+</p>
+                <p class="condition">
+                    <label>Lượt xem: </label>
+                    
+                    <span>
+                    @Convert.ToInt32(Model.Details.LuotXem/2)</span> lượt xem
+                </p>
+                <div class="content-price">
+                    <p class="price-new">
+                        <span class="price-box">@string.Format("{0:n0}", Model.Details.Gia) &#x20ab</span>
+                    </p>
+                    
+                </div>
+                <p class="condition">
+                    
+                    <label>Tình Trạng: </label>
+                    @if((Model.Details.SoLuongTon) > 0)
+                    {
+                        <span>Còn hàng</span>
+                    }
+                    @if ((Model.Details.SoLuongTon) <= 0)
+                    {
+                    <span>Hết hàng</span>
+                    }
+                </p>
+                <div class="short-description">
+                    <p>
+                        @Html.DisplayFor(m => m.Details.MoTa)
+                    </p>
+                </div>
+                <form action="#">
+                    <div class="shop-product-add">
+                        <div class="add-cart">
+                            @*<p class="quantity cart-plus-minus">
+                                <label>Số lượng</label>
+                                <input class="text" type="text" value=" @Html.DisplayFor(m=>m.Details.SoLuong)">
+                            </p>*@
+                            @if (Session["UserID"] != null)
+                            {
+                                if ( Model.Details.SoLuongTon <= 0)
+                                {
+                                    <div class="shop-add-cart">
+                                        <button href="javascript:void(0)" disabled style="cursor: not-allowed;" id="detail_@Model.Details.ID" class="details-product" title="Sản phẩm hết hàng.">
+                                            Thêm vào giỏ
+                                        </button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="shop-add-cart">
+                                        <a href="javascript:void(0)" id="detail_@Model.Details.ID" class="details-product" title="Add to cart">
+                                            Thêm vào giỏ
+                                        </a>
+                                    </div>
+                                }
+                            }
+                            <div id="fb-root"></div>
+                            <script>
+(function (d, s, id) {
+                                    var js, fjs = d.getElementsByTagName(s)[0];
+                                    if (d.getElementById(id)) return;
+                                    js = d.createElement(s); js.id = id;
+                                    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+                                    fjs.parentNode.insertBefore(js, fjs);
+                                }(document, 'script', 'facebook-jssdk'));</script>   
+                            
+                            <div class="fb-like" data-href="http://k2team.net/SanPham/ChiTiet/@Model.Details.ID" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+                            <ul class="usefull-links">
+                                <li class="sendtofriend">
+                                    <a class="send-friend-button" href="#"> Send to a friend </a>
+                                </li>
+                                <li class="print">
+                                    <a class="#" href="#"> In </a>
+                                </li>
+                            </ul>
+                            <p class="add-wishlist">
+                                <a class="add-wish" href="#">
+                                    Thêm vào danhs ách yêu thích
+                                </a>
+                            </p>
+                        </div>
+                        <div class="clearfix"></div>
+                        <!--<div class="size-color">
+                                <fieldset class="size">
+                                    <label>Kích cỡ </label>
+                                    <div class="selector">
+                                        <select id="group_1" class="form-control" name="group_1">
+                                            <option title="S" selected="selected" value="1">S</option>
+                                            <option title="M" value="2">M</option>
+                                            <option title="L" value="3">L</option>
+                                        </select>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="color">
+                                    <label>Màu sắc</label>
+                                    <div class="color-selector">
+                                        <ul>
+                                            <li><a class="color-1" href="#"></a></li>
+                                            <li><a class="color-2" href="#"></a></li>
+                                        </ul>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>-->
+                </form>
+                <div class="clearfix"></div>
+                <p class="quantity-available">
+                    <span>@Model.Details.SoLuongTon</span>
+                    <span>sản phẩm</span>
+                </p>
+                
+                <p class="social-sharing">
+                    <button class="btn btn-default btn-twitter">
+                        <i class="icon-twitter"></i>
+                        Tweet
+                    </button>
+                    <button class="btn btn-default btn-facebook">
+                        <i class="icon-facebook"></i><a href="@Html.Raw(Html.AttributeEncode(ViewBag.Link))">
+    Share</a>
+</button>
+                    <button class="btn btn-default btn-google-plus">
+                        <i class="icon-google-plus"></i>
+                        Google+
+                    </button>
+                    <button class="btn btn-default btn-pinterest">
+                        <i class="icon-pinterest"></i>
+                        Pinterest
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="shop-1-product-tab">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="feature-tab-area">
+                    <ul class="tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#moreinfo" aria-controls="moreinfo" role="tab"
+                               data-toggle="tab">Thông tin khác</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active fade in" id="moreinfo">
+                            <div class="tab-box">
+                                <div class="more-info">
+                                    <p>
+                                        @Html.Raw(HttpUtility.HtmlDecode(@Model.Details.NoiDung))
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="fb-root"></div>
+<script>
+(function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.9&appId=1797392353924225";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-comments" data-href="http://k2team.net/SanPham/ChiTiet/@Model.Details.ID" data-width="100%" data-numposts="5"></div>
+<div class="other-product-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-title">
+                    <h2>
+                        <span>Sản phẩm liên quan </span>
+                    </h2>
+                </div>
+                <div class="row">
+                    <div class="accessories">
+                        <div class="accessories-carousel owl-carousel owl-theme" style="opacity: 1; display: block;">
+                            @foreach (var item in Model.SanPham.Where(s => s.idLoaiSanPham == Model.Details.idLoaiSanPham &&(s.ID!=Model.Details.ID)&&(s.BiXoa == false)).ToList())
+                                        {
+                            <div class="col-md-12">
+                                <div class="single-product">
+                                    <div class="product-img">
+                                        <a href="~/SanPham/ChiTiet/@item.ID">
+                                            <img src="~/Assets/HinhAnh/@item.ID/@item.HinhAnh" alt="">
+                                        </a>
+                                        <span class="new">new</span>
+                                        <span class="sale">sale!</span>
+                                        <div class="product-action">
+                                            <div class="add-to-links">
+                                                <ul>
+                                                    @if (Session["UserID"] != null)
+                                    {
+                                        if (item.TinhTrang == false || item.SoLuongTon == 0)
+                                        {
+                                                            <li>
+                                                                <a href="javascript:void(0)" style="pointer-events: none !important;cursor: crosshair;color:Gray;" id="@item.ID" class="divAddCart" title="Add to cart">
+                                                                    <i class="fa fa-shopping-cart"></i>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li>
+                                                                <a href="javascript:void(0)" id="@item.ID" class="divAddCart" title="Add to cart">
+                                                                    <i class="fa fa-shopping-cart"></i>
+                                                                </a>
+                                                            </li>
+                                                        }
+                            int a = Model.SanPhamYeuThich.Where(s => s.idSanPham == item.ID && (s.TaiKhoan.Email == Session["UserEmail"].ToString())).Count();
+                                                        if (a == 0)
+                                                        {
+                                                            <li>
+                                                                <button style="border: 1px solid white;background: transparent; padding: 15px;font-weight: bold;" type="button" class="btn-adlist btn-primary" id="add-wishlist-@item.ID" data-loading-text="Searching..." data-end-text="&#x2714;">
+                                                                    @*<a href="javascript:void(0);" title="Add to wishlist">
+                                                                            <i class="fa fa-heart"
+                                                                               aria-hidden="true"></i>
+                                                                        </a>*@
+                                                                    &#x2764;
+                                                                </button>
+                                                                <script>
+                                                                                    $('#add-wishlist-@item.ID').on("click", function() {
+                                                                                    $('#add-wishlist-@item.ID').button("load");
+                                                                                    setTimeout(function() {
+                                                                                    $('#add-wishlist-@item.ID').button("end");
+                                                                                    $('#add-wishlist-@item.ID').attr('disabled', 'disabled');
+                                                                                    }, 500);
+                                                                                    });
+                                                                </script>
+                                                            </li>
+                                                        }
+                                                        if (a != 0)
+                                                        {
+                                                            <li>
+                                                                <button style="border: 1px solid white;background: transparent; padding: 15px;font-weight: bold; cursor:not-allowed;" disabled="true" type="button" class="btn-adlist btn-primary" id="add-wishlist-@item.ID" data-loading-text="Searching..." data-end-text="&#x2714;">
+                                                                    @*<a href="javascript:void(0);" title="Add to wishlist">
+                                                                            <i class="fa fa-heart"
+                                                                               aria-hidden="true"></i>
+                                                                        </a>*@
+                                                                    &#x2714;
+                                                                </button>
+                                                            </li>
+
+                                                        }
+                                                    }
+                                                    <li>
+                                                        <a href="~/SanPham/ChiTiet/@item.ID" title="Add to compare">
+                                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <div class="quick-view">
+                                                    <a href="#" id="quick_view_@item.ID" class="modal-product" data-toggle="modal" data-target="#myModal"
+                                                       title="Quick view">
+                                                        <span>Quick view</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        <h5 class="product-name">
+                                            <a href="~/SanPham/ChiTiet/@item.ID" title="Printed Chiffon Dress">
+                                               @item.TenSanPham
+                                            </a>
+                                        </h5>
+                                        <div class="reviews">
+                                            <div class="star-content clearfix">
+                                                <span class="star star-on"></span>
+                                                <span class="star star-on"></span>
+                                                <span class="star star-on"></span>
+                                                <span class="star star-on"></span>
+                                                <span class="star star-on"></span>
+                                            </div>
+                                            <div class="comment">
+                                                <span class="reviewcount">@Convert.ToInt32(item.LuotXem / 2)</span>
+                                                lượt xem
+                                            </div>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="price"> @string.Format("{0:n0}", @item.Gia) &#x20ab </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section modal{
+    <div id="add-Modal" class="modal1">
+
+        <!-- Modal content -->
+        <div class="modal-content1">
+            <div class="modal-header">
+                <span onclick='hide()' id="close-tab" class="close">&times;</span>
+                <h2 style="font-size:24px;">Sản phẩm đã được thêm vào giỏ hàng.</h2>
+            </div>
+            <div class="modal-body">
+                <img style="    width: 130px;" src="" id="img-addcart" />
+                <div style="position: absolute;top: 20px;left: 31%;">
+                    <p style="font-size:18px;" class="name-product-addcart">Tên sản phẩm</p>
+                    <p style="color: black;font-size: 18px;">Số lượng: 1</p>
+                    <span style="color:black;font-size: 18px;">Giá:</span> <span style="color: black;font-size: 18px;" id="price-product-addcart"> </span><span style="font-size:16px;"> &#x20ab</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="hide()" class="btn btn-primary">Tiếp tục mua sản phẩm</button>
+                <a href="~/MuaSam/GioHang"><button type="button" class="btn btn-success">Giỏ hàng</button></a>
+                <a href="~/MuaSam/ThanhToan"><button type="button" class="btn btn-info">Thanh toán</button></a>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-5 col-sm-5 col-xs-6">
+                        <div class="modal-pic ex1" title="Printed Chiffon Dress">
+                            <a href="#">
+                                <img class="zoomImg" id="img-modal" src="" alt="">
+                            </a>
+                            <span class="new">new</span>
+                            <span class="sale">sale</span>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-6">
+                        <h1 id="modal-name"></h1>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <p class="reference">
+                            <label>Nhà sản xuất: </label>
+                            <span id="modal-procer"></span>
+                        </p>
+                        <p class="condition">
+                            <label>Thể loại: </label>
+                            <span id="modal-option"></span>
+                        </p>
+                        <div class="content-price">
+                            <p class="price-new">
+                                <span class="price-box1"></span><span style="font-size: 35px;
+    margin-left: 4px;color: #c06b81;">&#x20ab</span>
+                                <span class="price-tax">.</span>
+                            </p>
+                        </div>
+                        <div class="short-description">
+                            <p id="modal-details">
+
+                            </p>
+                        </div>
+                        <form action="#">
+                            <div class="shop-product-add">
+                                @if (Session["UserID"] != null)
+                                {
+                                <div class="add-cart">
+                                    @*<p class="quantity cart-plus-minus">
+                                            <label>Số lượng</label>
+                                            <input id="quantity_wanted" class="text" type="text" value="1" name="qty"
+                                                   style="border: 1px solid rgb(189, 194, 201);">
+                                            <!--<div class="dec qtybutton">-</div>-->
+                                            <!--<div class="inc qtybutton">+</div>-->
+                                        </p>*@
+                                    <div class="shop-add-cart">
+                                        <button class="exclusive">
+                                            <span>Thêm vào giỏ</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                }
+                                <div class="clearfix"></div>
+
+                            </div>
+                        </form>
+                        <div class="clearfix"></div>
+                        <p class="quantity-available">
+                            <span id="modal-quantity">10</span>
+                            <span>Sản phẩm</span>
+                        </p>
+                        <p class="availability-status">
+                            <span>Vào xem</span>
+                        </p>
+                        <p class="social-sharing">
+                            <button class="btn btn-default btn-twitter">
+                                <i class="icon-twitter"></i>
+                                Tweet
+                            </button>
+                            <button class="btn btn-default btn-facebook">
+                                <i class="icon-facebook"></i>
+                                Share
+                            </button>
+                            <button class="btn btn-default btn-google-plus">
+                                <i class="icon-google-plus"></i>
+                                Google+
+                            </button>
+                            <button class="btn btn-default btn-pinterest">
+                                <i class="icon-pinterest"></i>
+                                Pinterest
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

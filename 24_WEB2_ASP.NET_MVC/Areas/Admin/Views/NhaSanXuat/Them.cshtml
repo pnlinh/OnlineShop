@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Nhà Sản Xuất";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section name
+{
+    Nhà Sản Xuất
+    <small>Thêm</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Nhà Sản Xuất", "DanhSach", "NhaSanXuat")</li>
+    <li class="active">Thêm</li>
+}
+
+<div class="col-md-6 col-md-offset-3">
+    <div class="box box-primary">
+
+        @using (Html.BeginForm())
+        {
+            <div class="box-body">
+                
+                <div class="form-group">
+                    <label for="txtTenNSX">Tên nhà sản xuất</label>
+                    <input type="text" class="form-control" id="txtTenNSX" name="TenNhaSanXuat">
+                    @Html.ValidationMessage("TenNhaSanXuat", "", new { @class = "text-danger" })
+                    @if (ViewBag.Loi != null)
+                    {
+                        <p class="text-danger">@ViewBag.Loi</p>
+                    }
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Lưu lại</button>
+                <button type="reset" class="btn btn-danger" style="margin-left: 35px;">Hủy bỏ</button>
+            </div>
+        }
+    </div>
+</div>

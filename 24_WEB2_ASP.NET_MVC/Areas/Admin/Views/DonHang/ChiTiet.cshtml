@@ -1,0 +1,149 @@
+﻿@using _24_WEB2_ASP.NET_MVC.Helpers
+@using _24_WEB2_ASP.NET_MVC.Models
+@model _24_WEB2_ASP.NET_MVC.Models.HoaDon
+
+@{
+    ViewBag.Title = "Đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section name
+{
+    Đơn hàng
+    <small>Chi tiết</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Đơn hàng", "DanhSach", "DonHang")</li>
+    <li class="active">Chi tiết</li>
+}
+
+@{
+    OnlineShopEntities db = new OnlineShopEntities();
+    var list = db.ChiTiet_HoaDon.Where(x => x.idHoaDon == @Model.ID);
+}
+
+<section class="invoice">
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                <i class="fa fa-shopping-cart"></i> Đơn hàng số @Model.ID
+                <small class="pull-right">Hôm nay ngày: @DateTime.Now </small>
+            </h2>
+        </div>
+    </div>
+
+    <div class="row invoice-info">
+        <div class="col-sm-4 invoice-col">
+            <div class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">Người giao</h3></div>
+                <ul class="list-group">
+                    <li class="list-group-item">Họ tên: @CurrentContext.LayThongTinAdmin().Name</li>
+                    <li class="list-group-item">Email: @CurrentContext.LayThongTinAdmin().Email</li>
+                    <li class="list-group-item">
+                        Địa chỉ: Công ty TNHH MTV Lịnh Store<br>
+                    </li>
+                    <li class="list-group-item">Số điện thoại: 0123 456 789</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-4 invoice-col">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Người nhận</h3>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">Họ tên: @ViewBag.DiaChiGiaoHang.TenKhachHang</li>
+                    <li class="list-group-item">Số điện thoại: @ViewBag.DiaChiGiaoHang.Phone</li>
+                    <li class="list-group-item">Email: @ViewBag.DiaChiGiaoHang.Email</li>
+                    <li class="list-group-item">Địa chỉ: @ViewBag.DiaChiGiaoHang.DiaChi</li>
+                    <li class="list-group-item">Ghi chú: @ViewBag.DiaChiGiaoHang.YeuCau</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-sm-4 invoice-col">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Thông tin đơn hàng</h3>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">Mã đơn hàng: @Model.ID</li>
+                    <li class="list-group-item">Ngày đặt: @Model.NgayDat</li>
+                    <li class="list-group-item">Khách hàng: @Model.TaiKhoan.Name</li>
+                    <li class="list-group-item">Số lượng: @Model.SoLuong</li>
+                    <li class="list-group-item">
+                        Tổng tiền: @string.Format("{0:n0}", Model.TongTien) &#x20ab;
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="30%">Tên sản phẩm</th>
+                            <th width="5%">Hình ảnh</th>
+                            <th width="5%">Số lượng</th>
+                            <th width="8%">Giá bán</th>
+                            <th width="10%">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in list)
+                        {
+                            <tr>
+                                <td>@item.SanPham.TenSanPham</td>
+                                <td>
+                                    <img src="~/Assets/HinhAnh/@item.SanPham.ID/@item.SanPham.HinhAnh" alt="" class="img-responsive" style="width: 40px; height: 40px;">
+                                </td>
+                                <td>@item.SoLuong</td>
+                                <td>@string.Format("{0:N0}", item.SanPham.Gia) &#x20ab;</td>
+                                @{
+                                    var thanhTien = item.SoLuong * item.DonGia;
+                                }
+                                <td>@string.Format("{0:N0}", thanhTien) &#x20ab;</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row no-print">
+        <div class="col-md-10">
+            @if (Model.TrangThai == 3)
+            {
+                <a id="inhoadon" class="btn btn-default" onclick="window.print()">
+                    <i class="fa fa-print"></i>
+                    In hóa đơn
+                </a>
+            }
+        </div>
+
+        @if (Model.TrangThai != 4)
+        {
+            <div class="col-md-1">
+                @if (Model.TrangThai != 2)
+                {
+                    if (Model.TrangThai != 3)
+                    {
+                        <a href="@Url.Action("GiaoHang", "DonHang", new {id = @Model.ID})" type="button" class="btn btn-primary pull-right">Giao hàng</a>
+                    }
+                }
+            </div>
+
+            <div class="col-md-1">
+                @if (Model.TrangThai != 3)
+                {
+                    <a href="@Url.Action("ThanhToan", "DonHang", new {id = @Model.ID})" type="button" class="btn btn-success pull-right">Thanh toán</a>
+                }
+            </div>
+        }
+    </div>
+</section>

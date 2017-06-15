@@ -1,0 +1,91 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.DangNhapVM
+@{
+    ViewBag.Title = "DangNhap";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <style>
+        .danger {
+            color: red;
+        }
+    </style>
+}
+
+<div class="entry-header-area">
+    <div class="container">
+        <div class="breadcrumb-area">
+            <div class="breadcrumb">
+                <a href="@Url.Action("Index", "TrangChu")" title="Return to Home">
+                    <i class="icon-home"></i>
+                </a>
+                <span class="navigation-pipe">&gt;</span>
+                <span class="navigation-page">
+                    Tài khoản
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="entry-header">
+                    <h1 class="entry-title">Tài Khoản</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="account-area mt-50">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <!-- login-area-start -->
+                <div class="login-area">
+                    <div class="section-title mb-20">
+                        <h2>Đăng nhập tài khoản</h2>
+                    </div>
+                    @using (Html.BeginForm("DangNhap", "TaiKhoan", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <label for="username">Địa chỉ Email <span>*</span></label><br />
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "danger" })
+                        @Html.TextBoxFor(m => m.Email, new { placeholder = "Nhập email của bạn" })
+                        <label for="password">Mật khẩu<span>*</span></label><br />
+                        @Html.ValidationMessageFor(m => m.Pass, "", new { @class = "danger" })
+                        @Html.TextBoxFor(m => m.Pass, new { placeholder = "Nhập mật khẩu", Type = "password" })
+                        <button type="submit">Đăng nhập</button>
+
+                    }
+                </div>
+                <!-- login-area-end -->
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <!-- register-area-start -->
+                <div class="register-area">
+                    <div class="section-title mb-20">
+                        <h2>Đăng Ký</h2>
+                    </div>
+                    <p>Nếu bạn chưa có tài khoản, hãy đăng ký.</p>
+                    <div class="info-register">
+                        <i class="fa fa-check" aria-hidden="true"></i><span>Giúp mua hàng nhanh hơn</span>
+                    </div>
+                    <div class="info-register">
+                        <i class="fa fa-check" aria-hidden="true"></i><span>Tích lũy điểm giảm giá</span><br>
+                    </div>
+                    <div class="info-register">
+                        <i class="fa fa-check" aria-hidden="true"></i><span>Dễ quản lí thông tin mua hàng</span><br>
+                    </div>
+                    <a href="@Url.Action("/DangKy")"><button type="submit">Đăng ký</button></a>
+                </div>
+                <!-- register-area-end -->
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

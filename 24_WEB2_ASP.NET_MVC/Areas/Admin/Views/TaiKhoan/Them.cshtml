@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Khách Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section name
+{
+    Khách Hàng
+    <small>Thêm</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Khách Hàng", "DanhSach", "TaiKhoan")</li>
+    <li class="active">Thêm</li>
+}

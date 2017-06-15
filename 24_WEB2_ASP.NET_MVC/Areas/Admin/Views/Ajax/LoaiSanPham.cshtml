@@ -1,0 +1,6 @@
+﻿@model IEnumerable<_24_WEB2_ASP.NET_MVC.Models.LoaiSanPham>
+
+@foreach (var item in Model)
+{
+    <option value="@item.ID">@item.TenLoaiSanPham</option>
+}

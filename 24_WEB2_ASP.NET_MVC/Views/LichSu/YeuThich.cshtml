@@ -1,0 +1,201 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "YeuThich";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section js
+{
+    <script>
+        function hide() {
+            var modal = document.getElementById('add-Modal');
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var modal = document.getElementById('add-Modal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        function addRequestVerificationToken(data) {
+            data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+            return data;
+        };
+
+        $(document).delegate('.cartDelWish', 'click', function () {
+            var DeleteItemId = parseInt($(this).attr('id').replace(/list_wishlist_/, ''));
+            //console.log(DeleteItemId);
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: '/TrangChu/DeleteWishList',
+                data: JSON.stringify({ itemId: DeleteItemId }),
+                success: function (data) {
+                    $('#list_wishlist_' + data).parents('tr').remove();
+                    var span = $(".countwish");
+                    span.html(parseInt(span.html()) - 1);
+                    //loadHeaderCart();
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+    
+
+        $(document).ready(function () {
+            $('.divAddCart').on('click', function () {
+                var getItemId = parseInt($(this).attr('id').replace(/cart_wish_/, ''));
+
+                //var getUserName = $('.divName').html();
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/AddCart',
+                    dataType: 'json',
+                    data: JSON.stringify({ ItemId: getItemId }),
+                    success: function (data) {
+                        $('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        $('.name-product-addcart').text(data.TenSanPham);
+                        $('#price-product-addcart').text(data.Gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                        var span = $(".countcart");
+                        span.html(parseInt(span.html()) + 1);
+                        $('#add-Modal').css("display", "block");
+                        loadHeaderCart();
+                        loadNumberCart();
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html" title="Return to Home">
+                <i class="icon-home"></i>
+            </a>
+            <span class="navigation-pipe">&gt;</span>
+            <span class="navigation-page">
+                Yêu thích
+            </span>
+        </div>
+    </div>
+</div>
+<div class="wishlist-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="entry-header">
+                    <h1 class="entry-title">Sản phẩm yêu thích</h1>
+                </div>
+                <div class="wishlist-content">
+                    <form action="#">
+                        <div class="wishlist-table table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="product-remove">
+                                            <span class="nobr">Xóa</span>
+                                        </th>
+                                        <th class="product-thumbnail">Hình ảnh</th>
+                                        <th class="product-name">
+                                            <span class="nobr">Tên sản phẩm</span>
+                                        </th>
+                                        <th class="product-price">
+                                            <span class="nobr"> Giá</span>
+                                        </th>
+                                        <th class="product-stock-stauts">
+                                            <span class="nobr">Tình trạng</span>
+                                        </th>
+                                        <th class="product-add-to-cart">
+                                            <span class="nobr">Mua sản phẩm </span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null)
+                                    {
+                                        int id = Convert.ToInt32(Session["UserID"]);
+                                        foreach (var item in Model.SanPhamYeuThich.Where(s => s.idKhachHang == id).ToList())
+                                        {
+                                            <tr>
+                                                <td class="product-remove">
+                                                    <a href="javascript:void(0);" class="cartDelWish" id="list_wishlist_@item.ID">×</a>
+                                                </td>
+                                                <td class="product-thumbnail">
+                                                    <a href="#">
+                                                        <img src="~/Assets/HinhAnh/@item.SanPham.ID/@item.SanPham.HinhAnh" alt="">
+                                                    </a>
+                                                </td>
+                                                <td class="product-name">
+                                                    <a href="#">@item.SanPham.TenSanPham</a>
+                                                </td>
+                                                <td class="product-price">
+                                                    <span class="amount">@string.Format("{0:n0}", item.SanPham.Gia) &#x20ab</span>
+                                                </td>
+                                                <td class="product-stock-status">
+                                                    @if (@item.SanPham.SoLuongTon>0)
+                                                    {
+                                                        <span class="wishlist-in-stock">Còn hàng</span>
+                                                    }
+                                                    @if (@item.SanPham.SoLuongTon<=0)
+                                                    {
+                                                        <span class="wishlist-in-stock">Hết hàng</span>
+                                                    }
+                                                </td>
+                                                <td class="product-add-to-cart">
+                                                    @if (@item.SanPham.SoLuongTon > 0)
+                                                    {
+                                                    <a href="javascript:void(0);" id="cart_wish_@item.SanPham.ID" class="divAddCart">Thêm vào giỏ</a>
+                                                    }
+                                                    @if (@item.SanPham.SoLuongTon <= 0)
+                                                    {
+                                                        <a href="javascript:void(0);" style="pointer-events:none; color:#808080;opacity:0.5" id="cart_wish_@item.SanPham.ID" class="divAddCart">Thêm vào giỏ</a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="add-Modal" class="modal1">
+
+    <!-- Modal content -->
+    <div class="modal-content1">
+        <div class="modal-header">
+            <span onclick='hide()' id="close-tab" class="close">&times;</span>
+            <h2 style="font-size:24px;">Sản phẩm đã được thêm vào giỏ hàng.</h2>
+        </div>
+        <div class="modal-body">
+            <img style="    width: 130px;" src="" id="img-addcart" />
+            <div style="position: absolute;top: 20px;left: 31%;">
+                <p style="font-size:18px;" class="name-product-addcart">Tên sản phẩm</p>
+                <p style="color: black;font-size: 18px;">Số lượng: 1</p>
+                <span style="color:black;font-size: 18px;">Giá:</span> <span style="color: black;font-size: 18px;" id="price-product-addcart"> </span><span style="font-size:16px;"> &#x20ab</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="hide()" class="btn btn-primary">Tiếp tục mua sản phẩm</button>
+            <a href="~/MuaSam/GioHang"><button type="button" class="btn btn-success">Giỏ hàng</button></a>
+            <a href="~/MuaSam/ThanhToan"><button type="button" class="btn btn-info">Thanh toán</button></a>
+        </div>
+    </div>
+
+</div>

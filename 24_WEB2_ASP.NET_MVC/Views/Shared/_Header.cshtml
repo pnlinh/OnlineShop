@@ -1,0 +1,459 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+<script src="~/Scripts/vendor/jquery-1.12.0.min.js"></script>
+<script>
+    function loadNumberCart() {
+        var getItemId = parseInt($('.divAddCart').closest('a').prop('id'));
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            url: '/TrangChu/LoadNumber',
+            dataType: 'json',
+            data: JSON.stringify({ id: getItemId }),
+            success: function (data) {
+                console.log(data);
+                if (data.SoLuong == data.SoLuongSanPham) {
+                    $('.divAddCart').css('pointer-events', 'none');
+                    $('.divAddCart').css('cursor','not-allow');
+                }
+            },
+        });
+    }
+    function loadHeaderCart() {
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            url: '/TrangChu/LoadCart',
+            success: function (data) {
+                var html = '';
+                var htmlsl = '';
+                var htmlcart = '';
+                var htmltoal = '';
+                var htmlcheckout = '';
+                var htmlerror = [];
+                var htmltotal = '';
+                var gia = 0;
+                var giacart = 0;
+                var sl = 0;
+                var numerror = 0;
+                for (var i = 0; i < data.length; i++)
+                {
+                    
+                    var num = $('#num-checkout').val();
+                    var item = data[i];
+                    gia += item.DonGia * item.SoLuong;
+                    sl += item.SoLuong;
+                    html += '<div class="media header-middle-checkout item-cart-' + item.ID + '">' +
+                        '<div class="media-left check-img">' +
+                        '<a href="#">' +
+                        '<img style="max-width:100%;height:80px" src="/Assets/HinhAnh/' + item.idSanPham + '/' + item.HinhAnh + '" alt="">' +
+                        '</a>' +
+                        '</div>' +
+                        '<div class="media-body checkout-content">' +
+                        '<h4 class="media-heading">' +
+                        '<span class="cart-count">' + item.SoLuong + 'X </span>' +
+                        '<a href="#">' + item.TenSanPham + '</a>' +
+                        '<span data-id="' + item.ID + '" class="btn-remove checkout-remove"' +
+                        'title="remove this product from my cart">' +
+                        '<i class="fa fa-times" aria-hidden="true"></i>' +
+                        '</span>' +
+                        '</h4>' +
+                        '<p>' + (item.DonGia * item.SoLuong).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'VNĐ</p>' +
+                        '</div>' +
+                        '</div > ';
+                    htmlcart += '<tr>' +
+                        '<td class="product-thumbnail">' +
+                        '<a href="@Url.Action("ChiTiet","SanPham")/'+ item.idSanPham + '">'+
+                        '<img src="/Assets/HinhAnh/' + item.idSanPham + '/' + item.HinhAnh + '" alt="">' +
+                        '</a>' +
+                        '</td>' +
+                        '<td class="product-name">' +
+                        '<a href="@Url.Action("ChiTiet","SanPham")/'+ item.idSanPham + '">' + item.TenSanPham + '</a>' +
+                        '</td>' +
+                        '<td class="product-price">' +
+                        '<span class="amount">' + item.Gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' &#x20ab</span>' +
+                        '</td>' +
+                        '<td class="product-quantity">' +
+                        '<input type="number" id="quantity-cart" value="'+item.SoLuong+'" min="1" name="numbercart" max='+item.SoLuongTon+'>' +
+                        '</td>' +
+                        '<td class="product-subtotal">' + (item.DonGia * item.SoLuong).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' &#x20ab</td>' +
+                        '<td class="product-remove">' +
+                        '<a href="javascript:;" class="cartDel" id="' + item.ID + '">' +
+                        '<i class="fa fa-trash" aria-hidden="true"></i>' +
+                        '</a>' +
+                        '</td>' +
+                        '</tr>';
+                    if (item.SoLuong > item.SoLuongTon) {
+                        numerror = numerror+ 1;
+                        htmlerror[i] += '<td class="product-name">' +
+                            '<span style="color:red;">Sản phẩm không đủ.Chỉ còn ' + item.SoLuongTon + ' sản phẩm </span><br />' +
+                            '' + item.TenSanPham + ' <input type="number" id="num-checkout" min="1" readonly value="' + item.SoLuong + '" max="' + item.SoLuongTon + '" style="border:none;background-color : transparent; font-weight:bold;text-align:center;"/>' +
+                            '</td>'
+                    }
+                    if (item.SoLuong <= item.SoLuongTon) {
+                        numerror = numerror+ 0;
+                      
+                        htmlerror[i] += '<td class="product-name">' +
+                            ''+item.TenSanPham+ ' <br><input type="number" id="num-checkout" readonly min="1" value="' + item.SoLuong + '" max="' + item.SoLuongTon + '" style="border:none;background-color : transparent; font-weight:bold;text-align:center;"/>' +
+                            '</td>'
+                    }
+                    if (numerror != 0) {
+                        $('#submit-checkout').attr('disabled', 'disabled');
+                        $('#submit-checkout').css('cursor', 'not-allowed');
+                    }
+                    else {
+                        $('#submit-checkout').removeAttr('disabled');
+                        $('#submit-checkout').css('cursor', 'pointer');
+                    }
+                    htmlcheckout += '<tr class="cart_item">' +
+                        '<td>' +
+                        '<img style= "width:60px;" src= "/Assets/HinhAnh/' + item.idSanPham + '/' + item.HinhAnh + '" />' +
+                        '</td >' +
+
+                        htmlerror[i]
+                        + '<td class="product-total">' +
+                        '<span class="amount">' + (item.DonGia * item.SoLuong).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '&#x20ab</span>' +
+                        '</td>' +
+                        '</tr>';
+                   
+                }
+                if (gia > 0) {
+                    html +=
+                        '<div class="cart-total">' +
+                        '<span>Tổng cộng</span>' +
+                    '<span><b>' + gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' &#x20ab</b></span>' +
+                        '</div>'
+                        + '<div class="checkout" >' +
+                        '<a href="@Url.Action("ThanhToan", "MuaSam")">' +
+                        '<span>' +
+                        'Thanh Toán<i class="fa fa-angle-right" aria-hidden="true"></i>' +
+                        '</span>' +
+                        '</a>' +
+                        '</div >';
+                    htmltoal += '<tbody>' +
+                        '<tr class="cart-subtotal">' +
+                        '<th>tổng sản phẩm</th>' +
+                        '<td>' +
+                        ' <span class="amount">' + gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' &#x20ab</span>' +
+                        ' </td>' +
+                        '</tr>' +
+                        '<tr class="order-total">' +
+                        '<th>Thành tiền</th>' +
+                        ' <td>' +
+                        ' <strong>' +
+                        '<span class="amount">' + gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+ '&#x20ab</span>' +
+                        '</strong>' +
+                        '</td>' +
+                        '</tr>' +
+                        '</tbody>';
+                    htmltotal += 
+                    '<th>Thành tiền</th>' +
+                        '<td colspan="2">' +
+
+                        '<strong><span class="amount">' + gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' &#x20ab</span></strong>' +
+                        '</td>';
+                        
+                }
+                if (gia == 0) {
+                    html +=
+                    '<div class="infor-cartview" style="font-size: 16px;background: #dff0d8;color: #3c763d; padding:63px;">' +
+                        '<p><samp>Bạn chưa có sản phẩm nào. Hãy thêm sản phẩm vào giỏ hàng của mình.</samp></p>' +
+                        '</div>';
+                }
+                if (sl == 0) {
+
+                    $('#list-product-cart').attr("style", "display:none");
+                    $('.checkout-area').attr("style", "display:none");
+                    $('#info-list-cart').attr("style", "display:block");
+                }
+                if (sl != 0) {
+                    $('#list-product-cart').attr("style", "display:block");
+                    $('.checkout-area').attr("style", "display:block");
+                    $('#info-list-cart').attr("style", "display:none");
+                }
+                $('.totla-carttd').html(htmltoal);
+                $('.td-cart').html(htmlcart);
+                $('#cart-header').html(html);
+                $('#count-cart').text(sl);
+                $('.cart_item_main').html(htmlcheckout);
+                $('.order-total').html(htmltotal);
+            },
+        });
+    }
+    $(function () {
+        loadHeaderCart();
+        $(document).delegate('.checkout-remove', 'click', function () {
+            var DeleteItemId = parseInt($(this).closest('span').attr('data-id'));
+            console.log(DeleteItemId);
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: '/TrangChu/DeleteCart',
+                data: JSON.stringify({ itemId: DeleteItemId }),
+                success: function (data) {
+                    $('#cart-header').find('.item-cart-' + data).remove();
+                    loadHeaderCart();
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+    })
+</script>
+<header class="header-4">
+    <div class="header-top">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-md-6 col-sm-6 hidden-xs">
+@if (Session["UserID"] != null)
+{
+                    <b>Xin chào:</b> <span style="line-height: 30px;color: white;text-transform: capitalize;">@Session["UserName"]</span>
+}
+                    @*<div class="language">
+                        <div class="current">
+                            <span>VietNam</span>
+                        </div>
+                        <ul class="lan-cur">
+
+                            <li>
+                                <img src="~/Content/img/1/1.png" alt="ar">
+                                <a href="#" rel="alternate" title="اللغة العربية (Arabic)">
+                                    <span>VietNamese</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="currencies">
+                        <div class="current">
+                            <span class="cur-label">Tiền tệ :</span>
+                            <strong>VNĐ</strong>
+                        </div>
+                        <ul class="lan-cur">
+
+                            <li>
+                                <a href="#"> Việt Nam Đồng (VNĐ) </a>
+                            </li>
+                        </ul>
+                    </div>*@
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="header-userinfo">
+                        <ul class="header-links">
+                           
+                            @if (Session["UserID"] != null)
+                            {
+                                <li class="first">
+                                    <a class="link-myaccount" title="My account" href="~/TaiKhoan/ThongTin"> Tài khoản của tôi </a>
+                                </li>
+                            <li>
+                                <a class="link-wishlist wishlist_block" title="My wishlist" href="~/LichSu/YeuThich">
+                                   
+                                    Sản phẩm yêu
+                                    thích của tôi
+                                </a>
+                                <span class="countwish" style="position: absolute;top: 16px;margin-left: 4px; color: white;">@ViewBag.listwish</span>
+                            </li>
+                          
+                            }
+                           
+              
+                            <li>
+                                @if (Session["UserID"] == null)
+                                {
+                                    <a class="login" title="Log in to your customer account" rel="nofollow" href="~/TaiKhoan/DangNhap">
+                                        Đăng
+                                        nhập
+                                    </a>
+                                }
+                                @if (Session["UserID"] != null)
+                                {
+
+                                    @Html.ActionLink("Thoát", "LogOut", "TaiKhoan", null, new { @class = "login" });
+                                }
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-middle">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-12 hidden-xs">
+                    @using (Html.BeginForm("SanPham", "MuaSam", FormMethod.Get))
+                    {
+                        <div class="search-block-top">
+                            
+                            <input type="text" value="@ViewBag.Search" name="search" placeholder="Nhập từ khóa tìm kiếm...">
+                            <button class="btn btn-default " id="search-index" name="submit_search" type="submit"></button>
+                            <script type="text/javascript">
+                                $('#search-index').attr('disabled', 'disabled');
+                                $('input[type="text"]').keyup(function () {
+                                    if ($('input[type="text"]').val() == "") {
+                                        $('#search-index').attr('disabled', 'disabled');
+                                    }
+                                    else {
+                                        $('#search-index').removeAttr('disabled');
+                                    }
+                                })
+                            </script>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="pos-logo">
+                        <a href="~/TrangChu/Index">
+                            <img class="logo img-responsive" src="~/Content/img/logo-4.jpg" alt="">
+                        </a>
+                    </div>
+                </div>
+                @if (Session["UserID"] != null)
+                {
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="shopping-cart">
+                            <a href="~/MuaSam/GioHang" rel="nofollow" title="View my shopping cart">
+                                <b>
+                                    Giỏ hàng <span class="countcart" id="count-cart" style="background: yellow; color:black;border-radius:50%;padding:5px 10px;"></span>
+
+                                </b>
+                            </a>
+                                <div id="cart-header" class="top-cart-content" style="width: 440px;height: 300px;overflow-y: auto;">
+                                   
+                                </div>
+                        </div>
+                    </div>
+                }
+                <div class="col-md-4 col-sm-6 col-xs-12 visible-xs">
+                    <div class="search-block-top">
+                        <input class="search-query-top" type="text" value="" placeholder="Search">
+                        <button class="btn btn-default button-search" name="submit_search" type="submit"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- mainmenu-area-start -->
+    <div class="main-menu-area hidden-xs hidden-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="main-menu">
+                        <nav>
+                            <ul>
+                                <li>
+                                    <a class="active" href="~/TrangChu/Index">Trang chủ</a>
+                                </li>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.DanhMuc.Where(s => (s.BiXoa == false)))
+                                    {
+                                        <li>
+                                            <a href="javascript:void(0);">@item.TenDanhMuc</a>
+                                            <div class="version pages">
+                                                <span>
+                                                    @foreach (var subcategory in item.LoaiSanPhams.Where(s=>s.BiXoa==false))
+                                                    {
+                                                        <a href=" @Url.Action("SanPham", "MuaSam", new { id = subcategory.ID })">@subcategory.TenLoaiSanPham</a>
+                                                    }
+                                                </span>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                                <li>
+                                    <a href="~/MuaSam/SanPham">Toàn bộ</a>
+                                </li>
+                                <li>
+                                    <a href="#">Các trang</a>
+                                    <div class="version pages">
+                                        <span>
+                                            <a href="~/ThongTinShop/ThongTin">Về chúng tôi</a>
+                                            @if (Session["UserID"] != null)
+                                            {
+                                                
+                                                <a href="~/TaiKhoan/ThongTin">Tài khoản của tôi</a>
+                                                <a href="~/MuaSam/GioHang">Giỏ hàng</a>
+                                                <a href="~/LichSu/YeuThich">Sản phẩm yêu thích</a>
+                                            }
+                                           
+                                            @if (Session["UserID"] == null)
+                                            {
+                                                <a href="~/TaiKhoan/DangNhap">Đăng nhập</a>
+                                            }
+                                            <a href="~/MuaSam/SanPham">Mua sắm</a>
+
+
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu-area visible-xs visible-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mobile_menu">
+                        <nav id="mobile_menu_active" style="display: block;">
+                            <ul>
+                                <li>
+                                    <a href="~/TrangChu/Index.cshtml">Trang chủ</a>
+                                </li>
+@if (Model != null)
+{
+    foreach (var item in Model.DanhMuc)
+    {
+                                <li>
+                                    <a href="javascript:void(0);">@item.TenDanhMuc</a>
+                                    <ul>
+                                        @foreach (var subcategory in item.LoaiSanPhams)
+                                        {
+                                        <li>
+                                            <a href=" @Url.Action("SanPham", "MuaSam", new { id = subcategory.ID })">@subcategory.TenLoaiSanPham</a>
+                                            
+                                        </li>
+                                        }
+
+                                    </ul>
+                                </li>
+    }
+}
+                               <li>
+                                   <a href="~/MuaSam/SanPham">Toàn bộ</a>
+                               </li>
+                                <li>
+                                    <a href="">Pages</a>
+                                    <ul>
+                                        <li>
+                                            <a href="~/ThongTinShop/ThongTin">Về chúng tôi</a>
+                                        </li>
+                                            @if (Session["UserID"] != null)
+                                            {
+                                                <li><a href="~/MuaSam/ThanhToan">Thanh toán</a></li>
+                                                <li><a href="~/TaiKhoan/ThongTin">Tài khoản của tôi</a></li>
+                                                <li><a href="~/MuaSam/GioHang">Giỏ hàng</a></li>
+                                                <li><a href="~/LichSu/YeuThich">Sản phẩm yêu thích</a></li>
+                                            }
+                                            @if (Session["UserID"] == null)
+                                            {
+                                                <li><a href="~/TaiKhoan/DangNhap">Đăng nhập</a></li>
+                                            }
+                                            <li><a href="~/MuaSam/SanPham">Mua sắm</a></li>
+</ul>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

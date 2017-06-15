@@ -1,0 +1,1113 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <head>
+        <style>
+     
+
+        
+            .main-menu ul li:hover {
+                background: #fff;
+                color: #000;
+            }
+
+            .reference label, .condition label {
+                font-style: normal;
+                margin-top:10px;
+            }
+            .home-2-service .service-info h2, .home-2-service .service-info p {
+                color: white;
+            }
+
+            .home-2-service .service-info h2, .home-2-service .service-info p {
+                color: white;
+            }
+
+            .product-img img {
+                height: 400px;
+            }
+
+            .products-inner img {
+                height: 130px;
+            }
+
+        </style>
+        <script src="~/Scripts/vendor/jquery-1.12.0.min.js"></script>
+        <script>
+        
+            // Get the modal
+          
+
+            function hide() {
+                var modal = document.getElementById('add-Modal');
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                var modal = document.getElementById('add-Modal');
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            function addRequestVerificationToken(data) {
+                data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+                return data;
+            };
+            $(document).ready(function () {
+                $('.divAddCart').on('click', function () {
+                    var getItemId = parseInt($(this).closest('a').prop('id'));
+
+                    var getUserName = $('.divName').html();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        url: '/TrangChu/AddCart',
+                        dataType: 'json',
+                        data: JSON.stringify({ ItemId: getItemId}),
+                        success: function (data) {
+                            $('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                            $('.name-product-addcart').text(data.TenSanPham);
+                            $('#price-product-addcart').text(data.Gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                            );
+                            var span = $(".countcart");
+                            span.html(parseInt(span.html()) + 1);
+                            $('#add-Modal').css("display", "block");
+                            loadHeaderCart();
+                            loadNumberCart();
+                        },
+                        error: function (result) {
+                            alert(result);
+                        }
+                    });
+                    return false;
+                });
+
+
+                $('#spnCart').on('click', function () {
+                    var getName = $('.divName').html();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        url: '/Home/GetCartItems',
+
+                        success: function (data) {
+                            $('#exampleModal').html(data);
+                            $('#exampleModal').modal({
+                                backdrop: false
+                            });
+                        },
+                        error: function (data) {
+                            alert(data);
+                        }
+                    });
+                });
+            });
+
+            $(document).ready(function () {
+                $('.btn-adlist').on('click', function () {
+                    var getItemId = parseInt($(this).attr('id').replace(/add-wishlist-/, ''));
+
+                    //var getUserName = $('.divName').html();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        url: '/TrangChu/AddWihsList',
+                        dataType: 'json',
+                        data: JSON.stringify({ id: getItemId }),
+                        success: function (data) {
+                            console.log(data);
+                            //$('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                            //$('.name-product-addcart').text(data.TenSanPham);
+                            //$('#price-product-addcart').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+                            var span = $(".countwish");
+                            span.html(parseInt(span.html()) + 1);
+                            //$('#add-Modal').css("display", "block");
+                            //loadHeaderCart();
+                            //loadNumberCart();
+
+                        },
+                        error: function (result) {
+                            alert(result);
+                        }
+                    });
+                });
+            });
+       
+            $(document).ready(function () {
+                $('.modal-product').on('click', function () {
+                    var UpdateItem = parseInt($(this).attr('id').replace(/model_product_/, ''));
+                    //var getUserName = $('.divName').html();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        url: '/TrangChu/loadModal',
+                        dataType: 'json',
+                        data: JSON.stringify({ id: UpdateItem }),
+                        success: function (data) {
+                            //var span = $(".countcart");
+                            //span.html(parseInt(span.html()) + 1);
+                            $("#modal-name").text(data.TenSanPham);
+                            $('#modal-procer').text(data.TenNhaSanXuat);
+                            $('#modal-option').text(data.TenLoaiSanPham);
+                            $('.price-box1').text(data.Gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                            $("#modal-details").text(data.MoTa);
+                            $("#modal-quantity").text(data.SoLuongTon);
+                            $('.exclusive').attr('id', 'modal_' + data.ID);
+                            $('#img-modal').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                            if ( data.SoLuongTon <= 0) {
+                                $('#modal_' + data.ID + '').attr('disabled', "disabled");
+                                $('#modal_' + data.ID + '').css("cursor", "not-allowed");
+                            }
+                            if ( data.SoLuongTon > 0) {
+                                $('#modal_' + data.ID + '').removeAttr('disabled');
+                                $('#modal_' + data.ID + '').css("cursor", "pointer");
+                            }
+                        },
+                        error: function (result) {
+                            alert(result);
+                        }
+                    });
+                });
+            });
+
+            $(document).ready(function () {
+                $('.exclusive').on('click', function () {
+                    var getItemId = parseInt($(this).attr('id').replace(/modal_/, ''));
+
+                    console.log(getItemId);
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        url: '/TrangChu/AddCart',
+                        dataType: 'json',
+                        data: JSON.stringify({ ItemId: getItemId }),
+                        success: function (data) {
+                            $('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                            $('.name-product-addcart').text(data.TenSanPham);
+                            $('#price-product-addcart').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+                            var span = $(".countcart");
+                            span.html(parseInt(span.html()) + 1);
+                            $('#add-Modal').css("display", "block");
+                            $('#add-Modal').css("z-index", '100000000');
+                            loadHeaderCart();
+                        },
+                        error: function (result) {
+                            alert(result);
+                        }
+                    });
+                    return false;
+                });
+            });
+
+        </script>
+    </head>
+}
+
+
+<body class="home-4-body">
+    <div class="slider-container">
+        <div class="slider">
+            <!-- Slider Image -->
+            <div id="mainslider" class="nivoSlider slider-image">
+                <img style="display:none; width: 1260px; visibility: hidden; height: 100%;" src="~/Content/img/slider/2.jpg"
+                     title="#htmlcaption1">
+                <img style="display:none ;width: 1260px; visibility: hidden; height: 100%;" src="~/Content/img/slider/slide-2.jpg"
+                     title="#htmlcaption2">
+            </div>
+            <div class="nivo-slice" name="1"
+                 style="left: 84px; width: 84px; height: 652px; opacity: 1; overflow: hidden; bottom: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-84px;">
+            </div>
+            <div class="nivo-slice" name="2"
+                 style="left: 168px; width: 84px; height: 652px; opacity: 1; overflow: hidden; top: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-168px;">
+            </div>
+            <div class="nivo-slice" name="3"
+                 style="left: 252px; width: 84px; height: 652px; opacity: 1; overflow: hidden; bottom: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-252px;">
+            </div>
+            <div class="nivo-slice" name="4"
+                 style="left: 336px; width: 84px; height: 652px; opacity: 1; overflow: hidden; top: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-336px;">
+            </div>
+            <div class="nivo-slice" name="5"
+                 style="left: 420px; width: 84px; height: 652px; opacity: 1; overflow: hidden; bottom: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-420px;">
+            </div>
+            <div class="nivo-slice" name="6"
+                 style="left: 504px; width: 84px; height: 652px; opacity: 1; overflow: hidden; top: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-504px;">
+            </div>
+            <div class="nivo-slice" name="7"
+                 style="left: 588px; width: 84px; height: 652px; opacity: 1; overflow: hidden; bottom: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-588px;">
+            </div>
+            <div class="nivo-slice" name="8"
+                 style="left: 672px; width: 84px; height: 652px; opacity: 1; overflow: hidden; top: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-672px;">
+            </div>
+            <div class="nivo-slice" name="9"
+                 style="left: 756px; width: 84px; height: 652px; opacity: 1; overflow: hidden; bottom: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-756px;">
+            </div>
+            <div class="nivo-slice" name="10"
+                 style="left: 840px; width: 84px; height: 652px; opacity: 1; overflow: hidden; top: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-840px;">
+            </div>
+            <div class="nivo-slice" name="11"
+                 style="left: 924px; width: 84px; height: 652px; opacity: 1; overflow: hidden; bottom: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-924px;">
+            </div>
+            <div class="nivo-slice" name="12"
+                 style="left: 1008px; width: 84px; height: 652px; opacity: 1; overflow: hidden; top: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-1008px;">
+            </div>
+            <div class="nivo-slice" name="13"
+                 style="left: 1092px; width: 84px; height: 652px; opacity: 1; overflow: hidden; bottom: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-1092px;">
+            </div>
+            <div class="nivo-slice" name="14"
+                 style="left: 1176px; width: 84px; height: 652px; opacity: 1; overflow: hidden; top: 0px;">
+                <img src="~/Content/img/slider/slide-2.jpg"
+                     style="position:absolute; width:1260px; height:auto; display:block !important; top:0; left:-1176px;">
+            </div>
+        </div>
+        <!-- Slider Caption 1 -->
+        <div id="htmlcaption1" class="nivo-html-caption slider-caption-1">
+            <div class="slider-progress"></div>
+            <div class="slide1-text slide-1">
+                <div class="middle-text">
+                    <div class="cap-dec wow bounceInLeft animated" data-wow-duration="0.9s" data-wow-delay="0s"
+                         style="width:500px;color:#333;visibility: visible; animation-duration: 0.9s; animation-delay: 0s; animation-name: bounceInLeft;">
+                        <h1 style="font-size: 38px;">Sản phẩm thời trang cao cấp cho nữ</h1>
+                    </div>
+                    <div class="cap-title wow bounceInRight animated" data-wow-duration="1.2s" data-wow-delay="0.2s"
+                         style="visibility: visible; animation-duration: 1.2s; animation-delay: 0.2s; animation-name: bounceInRight;">
+                        <h3>Giá chỉ 1.500.000 VNĐ</h3>
+                    </div>
+                    <div class="cap-readmore wow bounceInUp animated" data-wow-duration="1.3s" data-wow-delay=".5s"
+                         style="  visibility: visible; animation-duration: 1.3s; animation-delay: 0.5s; animation-name: bounceInUp;">
+                        <a href="#" style="color:#333;border:1px solid black;">Mua Ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slider Caption 2 -->
+        <div id="htmlcaption2" class="nivo-html-caption slider-caption-2">
+            <div class="slider-progress"></div>
+            <div class="slide1-text slide-2">
+                <div class="middle-text">
+                    <div class="cap-dec wow bounceIn animated" data-wow-duration="0.7s" data-wow-delay="0s"
+                         style="width:400px; color:black;visibility: visible; animation-duration: 0.5s; animation-delay: 0s; animation-name: bounceIn;">
+                        <h1 style="font-size:38px;">Lịch lãm phong cách cho nam</h1>
+                    </div>
+                    <div class="cap-title wow bounceIn animated" data-wow-duration="1.3s" data-wow-delay="0.2s"
+                         style="visibility: visible; animation-duration: 1s; animation-delay: 0.2s; animation-name: bounceIn;">
+                        <h3>Bộ sản phẩm nhập từ Pháp</h3>
+                    </div>
+                    <div class="cap-readmore wow bounceIn animated" data-wow-duration="2s" data-wow-delay=".5s"
+                         style=" visibility: visible; animation-duration: 2s; animation-delay: 0.5s; animation-name: bounceIn;">
+                        <a href="#" style="color:black;border:1px solid black;">Mua Ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--=====slider-end=====-->
+    <!--=====special-look-start=====-->
+    <div class="home-4-special-look">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="product-title">
+                        <h2>
+                            <span>Thông tin đặc biệt</span>
+                        </h2>
+                    </div>
+                    <div class="banner-content">
+                        <div class="col-1">
+                            <div class="banner-box">
+                                <a href="#">
+                                    <img src="~/Content/img/body/chitiet1.jpg" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="banner-box">
+                                <a href="#">
+                                    <img src="~/Content/img/body/1_4.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="banner-box">
+                                <a href="#">
+                                    <img src="~/Content/img/body/chitiet2.jpg" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--=====special-look-end=====-->
+    <!--=====daily-deals-start=====-->
+    <div class="home-4-daily-deals-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    @*<div class="product-title">
+                        <h2>
+                            <span>Khuyến mãi đặc biệt</span>
+                        </h2>
+                    </div>*@
+                    <div class="row">
+                        <div class="daily-deal">
+                            <div class="daily-deal-carousel owl-carousel owl-theme" style="opacity: 1; display: block;">
+                                <!--<div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 3200px; left: 0px; display: block;"><div class="owl-item" style="width: 400px;">
+                                -->
+                                @foreach (var item in Model.SanPham.Where(s => s.KhuyenMai == true &&(s.BiXoa==false)).Take(8).ToList())
+                                {
+                                <div class="col-md-12">
+                                    <div class="single-product">
+                                        <div class="daily-products">
+                                            <div class="product-img">
+                                                <a href="~/SanPham/ChiTiet/@item.ID">
+                                                    <img src="~/Assets/HinhAnh/@item.ID/@item.HinhAnh" alt="">
+                                                </a>
+                                                <span class="sale">sale!</span>
+                                            </div>
+                                            <div class="daily-content">
+                                                <h5 class="product-name">
+                                                    <a href="~/SanPham/ChiTiet/@item.ID" title="Printed Summer Dress">@item.TenSanPham</a>
+                                                </h5>
+                                                <div class="reviews">
+                                                    <div class="star-content clearfix">
+                                                        <span class="star"></span>
+                                                        <span class="star"></span>
+                                                        <span class="star"></span>
+                                                        <span class="star"></span>
+                                                        <span class="star"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="price-box">
+                                                    <span class="price">@string.Format("{0:n0}", item.Gia) &#x20ab </span>
+                                                   @* <span class="old-price"> 200.000 VNĐ </span>*@
+                                                </div>
+                                            </div>
+                                            <div class="upcoming">
+                                                <span class="is-countdown"> </span>
+                                                <div data-countdown="@item.NgayKetThuc">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--=====daily-deals-end=====-->
+    <!--=====product-tab-start=====-->
+    <div class="home-4-product-tab">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="feature-tab-area">
+                        <!-- Nav tabs -->
+                        <ul class="tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#newarrival" aria-controls="newarrival"
+                                   role="tab" data-toggle="tab">Sản phẩm mới</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#onsale" aria-controls="onsale" role="tab" data-toggle="tab">
+                                    Sản phẩm bán chạy nhất
+                                </a>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active fade in" id="newarrival">
+                                <div class="row">
+                                    <div class="product-carousel owl-carousel owl-theme"
+                                         style="opacity: 1; display: block;">
+                                        <!-- single-product start -->
+                                        <!--<div class="owl-wrapper-outer">-->
+                                        <!--<div class="owl-wrapper" style="width: 3000px; left: 0px; display: block;">-->
+                                        <!--<div class="owl-item" style="width: 300px;">-->
+                                        @Html.AntiForgeryToken()
+                                        @if (Model != null)
+                                        {
+                                            foreach (var item in Model.SanPham.Where(s => s.BiXoa == false).OrderByDescending(a => a.NgayNhap).Take(8).ToList())
+                                            {
+                                                <div class="col-md-12">
+                                                    <div class="single-product">
+                                                        <div class="product-img">
+                                                            <a href="~/SanPham/ChiTiet/@item.ID">
+                                                                <img src="~/Assets/HinhAnh/@item.ID/@item.HinhAnh" alt="">
+                                                            </a>
+                                                            <span class="new">new</span>
+                                                           
+                                                            <div class="product-action">
+                                                                <div class="add-to-links">
+                                                                    <ul>
+                                                                        @if (Session["UserID"] != null)
+                                                                        {
+                                                                            if (item.TinhTrang == false || item.SoLuongTon == 0)
+                                                                            {
+                                                                                <li>
+                                                                                    <a href="javascript:void(0)" style="pointer-events: none !important;cursor: crosshair;color:Gray;" id="@item.ID" class="divAddCart" title="Add to cart">
+                                                                                        <i class="fa fa-shopping-cart"></i>
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <li>
+                                                                                    <a href="javascript:void(0)" id="@item.ID" class="divAddCart" title="Add to cart">
+                                                                                        <i class="fa fa-shopping-cart"></i>
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
+                                                                            int a = Model.SanPhamYeuThich.Where(s => s.idSanPham == item.ID && (s.TaiKhoan.Email == Session["UserEmail"].ToString())).Count();
+                                                                            if (a == 0)
+                                                                            {
+                                                                            <li>
+                                                                                <button style="border: 1px solid white;background: transparent; padding: 15px;font-weight: bold;" type="button" class="btn-adlist btn-primary" id="add-wishlist-@item.ID" data-loading-text="Searching..." data-end-text="&#x2714;">
+                                                                                    @*<a href="javascript:void(0);" title="Add to wishlist">
+                                                                                    <i class="fa fa-heart"
+                                                                                       aria-hidden="true"></i>
+                                                                                </a>*@
+                                                                                    &#x2764;
+                                                                                    </button>
+                                                                                <script>
+                                                                                    $('#add-wishlist-@item.ID').on("click", function() {
+                                                                                    $('#add-wishlist-@item.ID').button("load");
+                                                                                    setTimeout(function() {
+                                                                                    $('#add-wishlist-@item.ID').button("end");
+                                                                                    $('#add-wishlist-@item.ID').attr('disabled', 'disabled');
+                                                                                    }, 500);
+                                                                                    });
+                                                                                </script>
+                                                                                </li>
+                                                                                  }
+                                                                                  if (a!=0)
+                                                                                  {
+                                                                                      <li>
+                                                                                    <button style="border: 1px solid white;background: transparent; padding: 15px;font-weight: bold; cursor:not-allowed;" disabled="true" type="button" class="btn-adlist btn-primary" id="add-wishlist-@item.ID" data-loading-text="Searching..." data-end-text="&#x2714;">
+                                                                                        @*<a href="javascript:void(0);" title="Add to wishlist">
+                                                                                                <i class="fa fa-heart"
+                                                                                                   aria-hidden="true"></i>
+                                                                                            </a>*@
+                                                                                        &#x2714;
+                                                                                    </button>
+                                                                            </li>
+
+                                                                                  }
+                                                                        }
+                                                                        <li>
+                                                                            <a href="~/SanPham/ChiTiet/@item.ID" title="Add to compare">
+                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="quick-view">
+                                                                        <a href="#" data-toggle="modal"
+                                                                           data-target="#myModal" class="modal-product" id="model_product_@item.ID" title="Quick view">
+                                                                            <span>Xem trước</span>
+                                                                            <!--<i class="fa fa-eye" aria-hidden="true"></i>-->
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-content">
+                                                            <h5 class="product-name">
+                                                                <a href="~/SanPham/ChiTiet/@item.ID" title="Printed Chiffon Dress" class="divName">@item.TenSanPham</a>
+                                                            </h5>
+                                                            <div class="reviews">
+                                                                <div class="star-content clearfix">
+                                                                    <span class="star star-on"></span>
+                                                                    <span class="star star-on"></span>
+                                                                    <span class="star star-on"></span>
+                                                                    <span class="star star-on"></span>
+                                                                    <span class="star star-on"></span>
+                                                                </div>
+                                                                <div class="comment">
+                                                                    <span class="reviewcount">@Convert.ToInt32(item.LuotXem/2)</span>
+                                                                    lượt xem
+                                                                </div>
+                                                            </div>
+                                                            <div class="price-box">
+                                                                <span class="price">@string.Format("{0:n0}", item.Gia) &#x20ab </span><span style="color:black;font-weight:bold; font-size:19px;"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="owl-controls clickable">-->
+                                        <!--<div class="owl-buttons">-->
+                                        <!--<div class="owl-prev"><i class="fa fa-angle-left"></i></div>-->
+                                        <!--<div class="owl-next"><i class="fa fa-angle-right"></i></div>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="onsale">
+                                <div class="row">
+                                    <div class="product-carousel owl-carousel owl-theme"
+                                         style="opacity: 0; display: block;">
+                                        @if (Model != null)
+                                        {
+                                            foreach (var item in Model.SanPham.Where(s => s.BiXoa == false).OrderByDescending(a => a.SoLuongBan).Take(8).ToList())
+                                            {
+                                                <div class="col-md-12">
+                                                    <div class="single-product">
+                                                        <div class="product-img">
+                                                            <a href="~/SanPham/ChiTiet/@item.ID">
+                                                                <img src="~/Assets/HinhAnh/@item.ID/@item.HinhAnh" alt="">
+                                                            </a>
+                                                            <span class="new">new</span>
+                                                            <span class="sale">sale!</span>
+                                                            <div class="product-action">
+                                                                <div class="add-to-links">
+                                                                    <ul>
+                                                                        @if (Session["UserID"] != null)
+                                                                        {
+                                                                            if (item.TinhTrang == false || item.SoLuongTon == 0)
+                                                                            {
+                                                                                <li>
+                                                                                    <a href="javascript:void(0)" style="pointer-events: none !important;cursor: crosshair;color:Gray;" id="@item.ID" class="divAddCart" title="Add to cart">
+                                                                                        <i class="fa fa-shopping-cart"></i>
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <li>
+                                                                                    <a href="javascript:void(0)" id="@item.ID" class="divAddCart" title="Add to cart">
+                                                                                        <i class="fa fa-shopping-cart"></i>
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
+                                                                            int a = Model.SanPhamYeuThich.Where(s => s.idSanPham == item.ID && (s.TaiKhoan.Email == Session["UserEmail"].ToString())).Count();
+                                                                            if (a == 0)
+                                                                            {
+                                                                                <li>
+                                                                                   
+                                                                                    <button style="border: 1px solid white;background: transparent; padding: 15px;font-weight: bold;" type="button" class="btn-adlist btn-primary btn-wishlist-@item.ID" id="add-wishlist-@item.ID" data-loading-text="Searching..." data-end-text="&#x2714;">
+                                                                                        @*<a href="javascript:void(0);" title="Add to wishlist">
+                                                                                                <i class="fa fa-heart"
+                                                                                                   aria-hidden="true"></i>
+                                                                                            </a>*@
+                                                                                        &#x2764;
+                                                                                    </button>
+                                                                                    <script>
+                                                                                        $('.btn-wishlist-@item.ID').on("click", function() {
+                                                                                    $('.btn-wishlist-@item.ID').button("load");
+                                                                                    setTimeout(function() {
+                                                                                    $('.btn-wishlist-@item.ID').button("end");
+                                                                                    $('.btn-wishlist-@item.ID').attr('disabled', 'disabled');
+                                                                                    }, 500);
+                                                                                    });
+                                                                                    </script>
+                                                                                </li>
+                                                                            }
+                                                                            if (a != 0)
+                                                                            {
+                                                                                <li>
+                                                                                    <button style="border: 1px solid white;background: transparent; padding: 15px;font-weight: bold; cursor:not-allowed;" disabled="true" type="button" class="btn-adlist btn-primary" id="add-wishlist-@item.ID" data-loading-text="Searching..." data-end-text="&#x2714;">
+                                                                                        @*<a href="javascript:void(0);" title="Add to wishlist">
+                                                                                                <i class="fa fa-heart"
+                                                                                                   aria-hidden="true"></i>
+                                                                                            </a>*@
+                                                                                        &#x2714;
+                                                                                    </button>
+                                                                                </li>
+
+                                                                            }
+                                                                        }
+                                                                        <li>
+                                                                            <a href="~/SanPham/ChiTiet/@item.ID" title="Add to compare">
+                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="quick-view">
+                                                                        <a href="#" data-toggle="modal"
+                                                                           data-target="#myModal" class="modal-product" id="model_product_@item.ID" title="Quick view">
+                                                                            <span>Xem trước</span>
+                                                                            <!--<i class="fa fa-eye" aria-hidden="true"></i>-->
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-content">
+                                                            <h5 class="product-name">
+                                                                <a href="~/SanPham/ChiTiet/@item.ID" class="divName" title="Printed Chiffon Dress">@item.TenSanPham</a>
+                                                            </h5>
+                                                            <div class="reviews">
+                                                                <div class="star-content clearfix">
+                                                                    <span class="star star-on"></span>
+                                                                    <span class="star star-on"></span>
+                                                                    <span class="star star-on"></span>
+                                                                    <span class="star star-on"></span>
+                                                                    <span class="star star-on"></span>
+                                                                </div>
+                                                                <div class="comment">
+                                                                    <span class="reviewcount">@Convert.ToInt32(item.LuotXem / 2)</span>
+                                                                    lượt xem
+                                                                </div>
+                                                            </div>
+                                                            <div class="price-box">
+                                                                <span class="price"> @string.Format("{0:n0}", item.Gia) &#x20ab </span><span style="color:black;font-weight:bold; font-size:19px;"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="home-4-service home-2-service service-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-12 service">
+                    <div class="service-logo">
+                        <img src="~/Content/img/service/2.1.png" alt="">
+                    </div>
+                    <div class="service-info">
+                        <h2>Hoàn trả 100% tiền sau 10 ngày giao hàng</h2>
+                        <p>
+                            sau 10 ngày giao hàng, nếu không hợp sản phẩm, bạn có thể đem đến shop trả và chúng tôi sẽ hoàn
+                            lại toàn bộ tiền cho bạn.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12 service">
+                    <div class="service-logo">
+                        <img src="~/Content/img/service/2.2.png" alt="">
+                    </div>
+                    <div class="service-info">
+                        <h2>Miễn phí giao hàng những đơn hàng trên 10 triệu.</h2>
+                        <p>Với những đơn hàng trên 10 triệu, chúng tôi sẽ miễn phí ship cho bạn.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12 service">
+                    <div class="service-logo">
+                        <img src="~/Content/img/service/2.3.png" alt="">
+                    </div>
+                    <div class="service-info">
+                        <h2>Đội ngũ online và hỗ trợ 24/7</h2>
+                        <p>nếu có gì thắc mắc , hãy liên hệ với chúng tôi, sẽ luôn có người hỗ trợ các bạn.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--=====service-end=====-->
+    <!--===== feature-product-start =====-->
+    <div class="home-4-feature-product">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="product-title">
+                        <h2>
+                            <span>Sản phẩm xem nhiều nhất</span>
+                        </h2>
+                    </div>
+                    <div class="row">
+                        <div class="feature-product-tab">
+                            <div class="feature-product-carousel owl-carousel owl-theme"
+                                 style="opacity: 1; display: block;">
+                                <!--<div class="owl-wrapper-outer">-->
+                                <!--<div class="owl-wrapper" style="width: 3200px; left: 0px; display: block;">-->
+                                <!--<div class="owl-item" style="width: 400px;">-->
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.SanPham.Where(s=>s.BiXoa==false).OrderByDescending(s => s.LuotXem).Take(8).ToList())
+                                    {
+                                        <div class="col-md-12">
+
+                                            <div class="item-product item-pro-mar">
+                                                <div class="products-inner">
+                                                    <a href="~/SanPham/ChiTiet/@item.ID" title="Faded Short Sleeves T-shirt">
+                                                        <img src="~/Assets/HinhAnh/@item.ID/@item.HinhAnh" alt="">
+                                                    </a>
+                                                </div>
+                                                <div class="product-contents">
+                                                    <h5 class="product-name">
+                                                        <a href="~/SanPham/ChiTiet/@item.ID" title="Faded Short Sleeves T-shirt">@item.TenSanPham</a>
+                                                    </h5>
+                                                    <div class="reviews">
+                                                        <div class="star-content clearfix">
+                                                            <span class="star star-on"></span>
+                                                            <span class="star star-on"></span>
+                                                            <span class="star star-on"></span>
+                                                            <span class="star star-on"></span>
+                                                            <span class="star star-on"></span>
+                                                        </div>
+                                                        <div class="comment">
+                                                            <span class="reviewcount">@Convert.ToInt32(item.LuotXem / 2)</span>
+                                                            lượt xem
+                                                        </div>
+                                                    </div>
+                                                    <div class="price-box">
+                                                        <span class="price">@string.Format("{0:n0}", item.Gia) &#x20ab </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--===== feature-product-end =====-->
+    <!--===== banner-2-start =====-->
+    <div class="home-4-banner-2">
+        <div class="container">
+@*            <div class="banner-box">*@
+@*                <a href="#">*@
+@*                    <img src="~/Content/img/banner/9_1.jpg" alt="">*@
+@*                </a>*@
+@*            </div>*@
+        </div>
+    </div>
+    <!--===== banner-2-end =====-->
+    <!--===== latest-blog-start =====-->
+    <div class="home-4-latest-blog">
+        <div class="container">
+            <div class="blog">
+                <div class="product-title">
+                    <h2>
+                        <span>danh mục sự kiện</span>
+                    </h2>
+                </div>
+                <div class="row">
+                    <div class="blogs-carousel owl-carousel owl-theme" style="opacity: 1; display: block;">
+                        <!--<div class="owl-wrapper-outer">-->
+                        <!--<div class="owl-wrapper" style="width: 3200px; left: 0px; display: block;">-->
+                        <!--<div class="owl-item" style="width: 400px;">-->
+                        <div class="col-md-12">
+                            <div class="single-blog">
+                                <div class="blog-img">
+                                    <a href="#">
+                                        <img src="~/Content/img/latest-blog/1.jpg" alt="">
+                                    </a>
+                                </div>
+                                <div class="blog-content">
+                                    <h4 class="blog-title">
+                                        <a href="#">Share sản phẩm của chúng tôi để có thể nhận được khuyến mãi hấp dẫn</a>
+                                    </h4>
+                                    <p>
+                                        Trong những ngày diễn ra sự kiện , chỉ cần bạn share những sản phẩm của chúng tôi,
+                                        tag vị trí shop, tag thêm 5 bạn bè, thì bạn sẽ được.....
+                                    </p>
+                                    <span class="blog-date">2017-03-09 13:40:04</span>
+                                    <a class="blog-read-more" href="#">
+                                        <span>Xem Chi Tiết</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--</div>-->
+                        <!--<div class="owl-item" style="width: 400px;">-->
+                        <div class="col-md-12">
+                            <div class="single-blog">
+                                <div class="blog-img">
+                                    <a href="#">
+                                        <img src="~/Content/img/latest-blog/3.jpg" alt="">
+                                    </a>
+                                </div>
+                                <div class="blog-content">
+                                    <h4 class="blog-title">
+                                        <a href="#">Share sản phẩm của chúng tôi để có thể nhận được khuyến mãi hấp dẫn</a>
+                                    </h4>
+                                    <p>
+                                        Trong những ngày diễn ra sự kiện , chỉ cần bạn share những sản phẩm của chúng tôi,
+                                        tag vị trí shop, tag thêm 5 bạn bè, thì bạn sẽ được.....
+                                    </p>
+                                    <span class="blog-date">2017-03-09 13:40:04</span>
+                                    <a class="blog-read-more" href="#">
+                                        <span>Xem Chi Tiết</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--</div>-->
+                        <!--<div class="owl-item" style="width: 400px;">-->
+                        <div class="col-md-12">
+                            <div class="single-blog">
+                                <div class="blog-img">
+                                    <a href="#">
+                                        <img src="~/Content/img/latest-blog/2.jpg" alt="">
+                                    </a>
+                                </div>
+                                <div class="blog-content">
+                                    <h4 class="blog-title">
+                                        <a href="#">Share sản phẩm của chúng tôi để có thể nhận được khuyến mãi hấp dẫn</a>
+                                    </h4>
+                                    <p>
+                                        Trong những ngày diễn ra sự kiện , chỉ cần bạn share những sản phẩm của chúng tôi,
+                                        tag vị trí shop, tag thêm 5 bạn bè, thì bạn sẽ được.....
+                                    </p>
+                                    <span class="blog-date">2017-03-09 13:40:04</span>
+                                    <a class="blog-read-more" href="#">
+                                        <span>Xem Chi Tiết</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--</div>-->
+                        <!--<div class="owl-item" style="width: 400px;">-->
+                        <div class="col-md-12">
+                            <div class="single-blog">
+                                <div class="blog-img">
+                                    <a href="#">
+                                        <img src="~/Content/img/latest-blog/3.jpg" alt="">
+                                    </a>
+                                </div>
+                                <div class="blog-content">
+                                    <h4 class="blog-title">
+                                        <a href="#">Share sản phẩm của chúng tôi để có thể nhận được khuyến mãi hấp dẫn</a>
+                                    </h4>
+                                    <p>
+                                        Trong những ngày diễn ra sự kiện , chỉ cần bạn share những sản phẩm của chúng tôi,
+                                        tag vị trí shop, tag thêm 5 bạn bè, thì bạn sẽ được.....
+                                    </p>
+                                    <span class="blog-date">2017-03-09 13:40:04</span>
+                                    <a class="blog-read-more" href="#">
+                                        <span>Xem Chi Tiết</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="owl-controls clickable">-->
+                        <!--<div class="owl-buttons">-->
+                        <!--<div class="owl-prev"><i class="fa fa-angle-left"></i></div>-->
+                        <!--<div class="owl-next"><i class="fa fa-angle-right"></i></div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--===== latest-blog-end =====-->
+    <!--===== testimonial-area-start =====-->
+    <div class="testimonial-area">
+        <div class="container">
+            <div class="testimonial">
+                <div class="testimonial-container">
+                    <div class="testimonial-carousel owl-carousel owl-theme" style="opacity: 1; display: block;">
+                        <!--<div class="owl-wrapper-outer">-->
+                        <!--<div class="owl-wrapper"-->
+                        <!--style="width: 4680px; left: 0px; display: block; transition: all 1000ms ease; transform: translate3d(0px, 0px, 0px);">-->
+                        <!--<div class="owl-item" style="width: 1170px;">-->
+                        <div class="item">
+                            <div class="author-content">
+                                <div class="img">
+                                    <img src="~/Content/img/latest-blog/850-untitled-1.jpg" alt="">
+                                </div>
+                                <div class="content">
+                                    <p class="content-name">Mekirin-H</p>
+                                    <p class="content-email">demo@posthemes.com</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-p">
+                                "Đem những sản phẩm tốt nhất vào cuộc sống, đó là mục tiêu của chúng
+                                tôi"
+                            </p>
+                        </div>
+                        <!--</div>-->
+                        <!--<div class="owl-item" style="width: 1170px;">-->
+                        <div class="item">
+                            <div class="author-content">
+                                <div class="img">
+                                    <img src="~/Content/img/latest-blog/850-untitled-1.jpg" alt="">
+                                </div>
+                                <div class="content">
+                                    <p class="content-name">Van nguyen</p>
+                                    <p class="content-email">nguyenbatranvan96@gmail.com</p>
+                                </div>
+                            </div>
+                            <p class="testimonial-p">
+                                "Đem những sản phẩm tốt nhất vào cuộc sống, đó là mục tiêu của chúng
+                                tôi"
+                            </p>
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                        </div>
+                        <!--<div class="owl-controls clickable">-->
+                        <!--<div class="owl-pagination">-->
+                        <!--<div class="owl-page active"><span class=""></span></div>-->
+                        <!--<div class="owl-page"><span class=""></span></div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   
+
+    @section modal{
+    <div id="add-Modal" class="modal1">
+
+        <!-- Modal content -->
+        <div class="modal-content1">
+            <div class="modal-header">
+                <span onclick='hide()' id="close-tab" class="close">&times;</span>
+                <h2 style="font-size:24px;">Sản phẩm đã được thêm vào giỏ hàng.</h2>
+            </div>
+            <div class="modal-body">
+                <img style="    width: 130px;" src="" id="img-addcart" />
+                <div style="position: absolute;top: 20px;left: 31%;">
+                    <p style="font-size:18px;" class="name-product-addcart">Tên sản phẩm</p>
+                    <p style="color: black;font-size: 18px;">Số lượng: 1</p>
+                    <span style="color:black;font-size: 18px;">Giá:</span> <span style="color: black;font-size: 18px;" id="price-product-addcart"> </span><span style="font-size:16px;"> &#x20ab</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="hide()" class="btn btn-primary">Tiếp tục mua sản phẩm</button>
+                <a href="~/MuaSam/GioHang"><button type="button" class="btn btn-success">Giỏ hàng</button></a>
+                <a href="~/MuaSam/ThanhToan"><button type="button" class="btn btn-info">Thanh toán</button></a>
+            </div>
+        </div>
+
+    </div>
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-5 col-xs-6">
+                            <div class="modal-pic ex1" title="Printed Chiffon Dress">
+                                <a href="#">
+                                    <img class="zoomImg"id="img-modal" src="" alt="">
+                                </a>
+                                <span class="new">new</span>
+                                <span class="sale">sale</span>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-sm-7 col-xs-6">
+                            <h1 id="modal-name"></h1>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <p class="reference">
+                                <label>Nhà sản xuất: </label>
+                                <span id="modal-procer"></span>
+                            </p>
+                            <p class="condition">
+                                <label>Thể loại: </label>
+                                <span id="modal-option"></span>
+                            </p>
+                            <div class="content-price">
+                                <p class="price-new">
+                                    <span class="price-box1" ></span><span style="font-size: 35px;
+    margin-left: 4px;color: #c06b81;">&#x20ab</span>
+                                    <span class="price-tax">.</span>
+                                </p>
+                            </div>
+                            <div class="short-description">
+                                <p id="modal-details">
+                                  
+                                </p>
+                            </div>
+                            <form action="#">
+                                <div class="shop-product-add">
+                                    @if (Session["UserID"] != null)
+                                    {
+                                        <div class="add-cart">
+                                            <div class="shop-add-cart">
+                                                <button class="exclusive">
+                                                    <span>Thêm vào giỏ</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="clearfix"></div>
+
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                            <p class="quantity-available">
+                                <span id="modal-quantity">10</span>
+                                <span>Sản phẩm</span>
+                            </p>
+                            <p class="availability-status">
+                                <span>Vào xem</span>
+                            </p>
+                            <p class="social-sharing">
+                                <button class="btn btn-default btn-twitter">
+                                    <i class="icon-twitter"></i>
+                                    Tweet
+                                </button>
+                                <button class="btn btn-default btn-facebook">
+                                    <i class="icon-facebook"></i>
+                                    Share
+                                </button>
+                                <button class="btn btn-default btn-google-plus">
+                                    <i class="icon-google-plus"></i>
+                                    Google+
+                                </button>
+                                <button class="btn btn-default btn-pinterest">
+                                    <i class="icon-pinterest"></i>
+                                    Pinterest
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    }
+</body>

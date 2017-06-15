@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="caa9b5d3177a4fbbb0637e6cca267f3d" Name="Diagram1">
+        <EntityTypeShape EntityType="OnlineShopModel.ChiTiet_HoaDon" Width="1.5" PointX="7.5" PointY="4" />
+        <EntityTypeShape EntityType="OnlineShopModel.Danh_Muc" Width="1.5" PointX="0.75" PointY="4.25" />
+        <EntityTypeShape EntityType="OnlineShopModel.DiaChiGiaoHang" Width="1.5" PointX="7.5" PointY="10.75" />
+        <EntityTypeShape EntityType="OnlineShopModel.HinhAnh_SanPham" Width="1.5" PointX="7.5" PointY="7.625" />
+        <EntityTypeShape EntityType="OnlineShopModel.HoaDon" Width="1.5" PointX="5.25" PointY="10.75" />
+        <EntityTypeShape EntityType="OnlineShopModel.Huyen" Width="1.5" PointX="0.75" PointY="10" />
+        <EntityTypeShape EntityType="OnlineShopModel.LoaiSanPham" Width="1.5" PointX="3" PointY="4.125" />
+        <EntityTypeShape EntityType="OnlineShopModel.NhaSanXuat" Width="1.5" PointX="3" PointY="1.375" />
+        <EntityTypeShape EntityType="OnlineShopModel.SanPham" Width="1.5" PointX="5.25" PointY="2.375" />
+        <EntityTypeShape EntityType="OnlineShopModel.SanPhamYeuThich" Width="1.5" PointX="10.5" PointY="4.125" />
+        <EntityTypeShape EntityType="OnlineShopModel.sysdiagram" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OnlineShopModel.TaiKhoan" Width="1.5" PointX="3" PointY="9.125" />
+        <EntityTypeShape EntityType="OnlineShopModel.ThanhPho" Width="1.5" PointX="1.5" PointY="14" />
+        <EntityTypeShape EntityType="OnlineShopModel.TrangThai_HoaDon" Width="1.5" PointX="3" PointY="17.75" />
+        <AssociationConnector Association="OnlineShopModel.FK__ChiTiet_H__idHoa__31EC6D26" />
+        <AssociationConnector Association="OnlineShopModel.FK__ChiTiet_H__idSan__32E0915F" />
+        <AssociationConnector Association="OnlineShopModel.FK__LoaiSanPh__idDan__37A5467C" />
+        <AssociationConnector Association="OnlineShopModel.FK__SanPham__idDanhM__37A5467C" />
+        <AssociationConnector Association="OnlineShopModel.FK__DiaChiGia__idTai__33D4B598" />
+        <AssociationConnector Association="OnlineShopModel.FK_DiaChiGiaoHang_HoaDon" />
+        <AssociationConnector Association="OnlineShopModel.FK__HinhAnh_S__idSan__32E0915F" />
+        <AssociationConnector Association="OnlineShopModel.FK__HoaDon__idKhachH__33D4B598" />
+        <AssociationConnector Association="OnlineShopModel.FK__HoaDon__TrangTha__35BCFE0A" />
+        <AssociationConnector Association="OnlineShopModel.FK__Huyen__idThanhPh__36B12243" />
+        <AssociationConnector Association="OnlineShopModel.FK_TaiKhoan_Huyen" />
+        <AssociationConnector Association="OnlineShopModel.FK__SanPham__idLoaiS__38996AB5" />
+        <AssociationConnector Association="OnlineShopModel.FK__SanPham__idNhaSa__398D8EEE" />
+        <AssociationConnector Association="OnlineShopModel.FK_SanPhamYeuThich_SanPham" />
+        <AssociationConnector Association="OnlineShopModel.FK__SanPhamYe__idKha__3B75D760" />
+        <AssociationConnector Association="OnlineShopModel.FK__TaiKhoan__idThan__3D5E1FD2" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

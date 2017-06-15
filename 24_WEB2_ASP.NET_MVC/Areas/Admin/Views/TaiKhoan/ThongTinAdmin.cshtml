@@ -1,0 +1,168 @@
+﻿@model _24_WEB2_ASP.NET_MVC.Models.TaiKhoan
+
+@{
+    ViewBag.Title = "Thông tin Admin";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section name
+{
+    Admin
+    <small>Thông tin</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Khách hàng", "DanhSach", "TaiKhoan")</li>
+    <li class="active">Admin</li>
+}
+
+<div class="col-md-3">
+    <div class="box box-primary">
+        <div class="box-body box-profile">
+            <img class="profile-user-img img-responsive img-circle" src="~/Assets/admin/joker.png" alt="">
+
+            <h3 class="profile-username text-center">@Model.Name</h3>
+
+            <p class="text-muted text-center">Quản trị viên</p>
+
+            <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                    <b>Họ tên</b><a class="pull-right">@Model.Name</a>
+                </li>
+                <li class="list-group-item">
+                    <b>Email</b> <a class="pull-right">@Model.Email</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-9">
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#settings" data-toggle="tab" aria-expanded="false">Đổi thông tin</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane " id="activity">
+            </div>
+
+            <div class="tab-pane active" id="settings">
+
+                <form id="frmAdmin" class="form-horizontal" method="post" action="">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="" disabled="" value="@Model.Email" title="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="Name">Họ tên</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" title="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="doiMatKhau"> Đổi mật khẩu
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Mật khẩu</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control matkhau" id="pass" disabled="" name="Pass" title="Nhập mật khẩu">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Nhập lại mật khẩu</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control matkhau" id="repass" disabled="" name="RePass" title="Xác nhận mật khẩu">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-danger">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js
+{
+    <script src="~/Assets/admin/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#doiMatKhau').change(function () {
+                if (jQuery(this).is(':checked')) {
+                    jQuery('.matkhau').removeAttr('disabled');
+                } else {
+                    jQuery('.matkhau').attr('disabled', '');
+                }
+            });
+
+            $('#frmAdmin').validate({
+                rules: {
+                    Name: {
+                        required: true,
+                        minlength: 3
+                    },
+                    Pass: {
+                        required: true,
+                        minlength: 6
+                    },
+                    RePass: {
+                        required: true,
+                        equalTo: "#pass"
+                    }
+                },
+                messages: {
+                    Name: {
+                        required: 'Hãy nhập tên',
+                        minlength: 'Tên phải từ 3 kí tự trở lên'
+                    },
+                    Pass: {
+                        required: 'Hãy nhập mật khẩu',
+                        minlength: 'Mật khẩu phải phải từ 6 kí tự trở lên'
+                    },
+                    RePass: {
+                        required: 'Hãy nhập mật khẩu xác nhận',
+                        equalTo: 'Mật khẩu xác nhận không đúng'
+                    }
+                },
+                errorElement: "em",
+                errorPlacement: function (error, element) {
+                    error.addClass("help-block");
+
+                    if (element.prop("type") === "checkbox") {
+                        error.insertAfter(element.parent("label"));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+
+                highlight: function (element, errorClass, validClass) {
+                    $(element).parents(".col-sm-10").addClass("has-error").removeClass("has-success");
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).parents(".col-sm-10").addClass("has-success").removeClass("has-error");
+                }
+
+            });
+
+        });
+    </script>
+}

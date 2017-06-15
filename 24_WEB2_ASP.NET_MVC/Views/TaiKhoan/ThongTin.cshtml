@@ -1,0 +1,325 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.DoiMatKhauVM
+@{
+    ViewBag.Title = "ThongTinTaiKhoan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <head>
+    <meta charset="UTF-8">
+    <link href="style.css" rel="stylesheet" />
+    <title>Title</title>
+    <style>
+        .section-padding2 {
+            padding: 30px 0;
+        }
+
+        .my-account-area h1 {
+            margin-bottom: 20px;
+        }
+
+        h1.heading-title {
+            border-bottom: 1px solid #d6d4d4;
+            font: 600 18px/22px "Open Sans",sans-serif;
+            padding: 0 0 17px;
+            text-transform: uppercase;
+            margin: 0 0 10px;
+        }
+
+        p {
+            margin: 0 0 15px;
+        }
+
+        .addresses-lists {
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .panel-default > .panel-heading {
+            background-image: linear-gradient(#f7f7f7, #ededed);
+            border-color: #cacaca #b7b7b7 #9a9a9a;
+            border-image: none;
+            border-radius: 4px 4px 0 0;
+            border-style: solid;
+            border-width: 1px;
+            color: #555454;
+            display: block;
+            font: 600 16px/20px "Open Sans",sans-serif;
+            overflow: hidden;
+            text-decoration: none;
+            text-shadow: 0 1px #ffffff;
+            text-transform: uppercase;
+        }
+        .danger{
+            color:red;
+        }
+        .panel-default > .panel-heading h4 {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.1;
+            margin: 0 0 10px;
+        }
+
+        .panel-title a {
+            display: block;
+            position: relative;
+        }
+
+        .panel-title a::before {
+            border: 1px solid #eeeeee;
+            content: "";
+            height: 46px;
+            left: 30px;
+            position: absolute;
+            top: -10px;
+        }
+
+        .addresses-lists .panel-heading a i {
+            color: #ffb3b3;
+            font-size: 20px;
+        }
+
+        .addresses-lists .panel-heading a span {
+            margin-left: 20px;
+        }
+
+        .addresses-lists h1.heading-title {
+            font: 500 16px/22px "Open Sans",sans-serif;
+        }
+
+        .my-account-area h1 {
+            margin-bottom: 20px;
+        }
+
+        h1.heading-title {
+            border-bottom: 1px solid #d6d4d4;
+            /*font: 600 18px/22px "Open Sans",sans-serif;*/
+            padding: 0 0 17px;
+            text-transform: uppercase;
+        }
+
+        .addresses-lists p.coupon-text {
+            color: #333333;
+        }
+
+        .coupon-info p.coupon-text {
+            margin-bottom: 15px;
+        }
+
+        .addresses-lists p.required {
+            color: #f13340;
+            margin: 9px 0 16px;
+        }
+
+        .coupon-info p {
+            margin-bottom: 0;
+        }
+
+        p.form-row label {
+            display: block;
+            color: #333333;
+            max-width: 100%;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        span.required {
+            color: #ff0000;
+            font-weight: 700;
+        }
+
+        p.form-row input {
+            background: #fbfbfb none repeat scroll 0 0;
+            border: 1px solid #e5e5e5;
+            height: 30px;
+            margin: 0 0 14px;
+            outline: 0 none;
+            padding: 0 0 0 10px;
+            width: 100%;
+        }
+
+        .checkbox-form p.form-row, .country-select {
+            margin-bottom: 20px;
+        }
+
+        .country-select label, .checkout-form-list label {
+            color: #333333;
+            display: block;
+            margin: 0 0 5px;
+            max-width: 100%;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .addresses-lists .shop-select select {
+            width: 100%;
+        }
+
+        .shop-select select {
+            -moz-appearance: none;
+            -moz-user-select: none;
+            background: #fbfbfb url(img/select-icon.png) no-repeat scroll right center;
+            border-style: solid none solid solid;
+            border-width: 1px medium 1px 1px;
+            color: #9c9b9b;
+            font-family: arial;
+            font-size: 12px;
+            font-weight: 400;
+            height: 27px;
+        }
+
+        .addresses-lists p.required {
+            color: #f13340;
+            margin: 9px 0 16px;
+        }
+
+        .button.button-small {
+            background: #6f6f6f none repeat scroll 0 0;
+            border-color: #666666 #5f5f5f #292929;
+            border-image: none;
+            border-radius: 0;
+            border-style: solid;
+            border-width: 1px;
+            color: #ffffff;
+            font: bold 13px/17px Arial,Helvetica,sans-serif;
+            padding: 0;
+            text-shadow: 1px 1px rgba(0, 0, 0, 0.24);
+        }
+
+        .button.button-small span {
+            border: 1px solid #8b8a8a;
+            display: block;
+            padding: 3px 8px;
+        }
+
+        addresses-lists .btn-default i {
+            font-size: 10px;
+            margin-right: 10px;
+        }
+
+        p.alert {
+            border-bottom: 1px solid #dddddd;
+            margin-bottom: 15px;
+        }
+
+        .order-history p {
+            background: #4a4a4a none repeat scroll 0 0;
+            color: #ffffff;
+            padding: 15px;
+        }
+    </style>
+    </head>
+}
+
+<div class="my-account-area section-padding2">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="heading-title">Thông tin chi tiết tài khoản </h1>
+                <p>Chào bạn đã đến với trang tài khoản, hãy xem lại và chỉnh sữa thông tin hoặc thêm để dễ dàng cho việc thanh toán</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="addresses-lists">
+                <div class="col-xs-12 col-sm-6 col-lg-6">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="../LichSu/YeuThich">
+                                                <i class="fa fa-heart"></i>
+                                                <span>Xem danh sách sản phẩm yêu thích</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                       
+                        <div id="collapseFour" style="display:block;"class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour" aria-expanded="false">
+                            <div class="panel-body">
+                                <div class="coupon-info">
+                                    <h1 class="heading-title">Đổi mật khẩu</h1>
+                                    <p class="coupon-text">Hãy cập nhật, nếu như bạn muốn thay đổi thông tin cá nhân của mình.</p>
+                                    <!--<p class="required">*Required field</p>-->
+                                   @using (Html.BeginForm("ThongTin", "TaiKhoan", FormMethod.Post))
+                                   {
+                                    @Html.AntiForgeryToken()
+                                        <p class="form-row">
+                                            <label><span class="required">*</span>Mật khẩu hiện tại</label>
+                                            @Html.ValidationMessageFor(m=>m.Pass,"", new { @class = "danger"  })
+                                            @Html.TextBoxFor(m => m.Pass,new { Type = "password" })
+                                        </p>
+                                        <p class="form-row">
+                                            <label>Mật khẩu mới</label>
+                                            @Html.ValidationMessageFor(m => m.NewPass, "", new { @class = "danger" })
+                                            @Html.TextBoxFor(m => m.NewPass ,new { Type = "password" })
+                                        </p>
+                                        <p class="form-row">
+                                            <label>Nhập lại mật khẩu</label>
+                                            @Html.ValidationMessageFor(m => m.ConfirmNewPass, "", new { @class = "danger" })
+                                            @Html.TextBoxFor(m => m.ConfirmNewPass, new { Type = "password" })
+                                        </p>
+                                        <button type="submit" style="border: 1px solid #8b8a8a;display: block;padding: 3px 8px;" class="btn btn-default button button-small">
+                                                Đổi mật khẩu
+                                                <i class="fa fa-chevron-right"></i>
+                                        </button>
+                                   }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-lg-6">
+                    <div class="myaccount-link-list">
+                        
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a href="~/LichSu/HoaDon">
+                                        <i class="fa fa-list-ol"></i>
+                                        <span>Lịch sử mua sắm</span>
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a href="~/TaiKhoan/ChiTiet">
+                                            <i class="fa fa-heart"></i>
+                                            <span>Chi tiết thông tin</span>
+                                        </a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="create-account-button pull-left">
+                    <a href="~/TrangChu/Index" class="btn btn-default button button-small" title="Home">
+                        <span>
+                            <i class="fa fa-chevron-left"></i>
+                            Trang chủ
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "Thêm Admin";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section name
+{
+    Khách Hàng
+    <small>Thêm Admin</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Khách Hàng", "DanhSach", "TaiKhoan")</li>
+    <li class="active">Thêm Admin</li>
+}
+
+<div class="col-md-12">
+
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">Thêm Admin</h3>
+        </div>
+
+        @using (Html.BeginForm("ThemAdmin", "TaiKhoan", FormMethod.Post, new {@class= "form-horizontal" }))
+        {
+            <div class="box-body">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="Email" name="Email">
+                        @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
+                        <p id="email" class="text-danger"></p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Mật khẩu</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="" name="Pass">
+                        @Html.ValidationMessage("Pass", "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Xác nhận mật khẩu</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="" name="ConfirmPass">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Họ tên</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="" name="Name">
+                        @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-md-1 col-md-offset-2">
+                        <button type="submit" class="btn btn-info">Thêm</button>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="reset" class="btn btn-default">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section js
+{
+    <script>
+        $(document).ready(function () {     
+            $('#Email').change(function () {
+                var email = $(this).val();
+                
+                $.ajax({
+                    url: '@Url.Action("KiemTraEmail", "Ajax")',
+                    type: "POST",
+                    data: { 'email': email },
+                    success: function (data) {
+                        console.log(data);
+
+                        if (data == null) {
+                            $('#email').html("Email khả dụng");
+                        }
+
+                        var emailCheck = $.trim(data.Email);
+
+                        if (email === emailCheck) {
+                            $('#email').html("Email đã tồn tại");
+                        } 
+                    }
+                });
+            });           
+        });
+    </script>
+}

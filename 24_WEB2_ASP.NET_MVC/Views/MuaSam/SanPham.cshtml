@@ -1,0 +1,974 @@
+﻿@model _24_WEB2_ASP.NET_MVC.Models.TimKiem
+@{
+    ViewBag.Title = "SanPham";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <head>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Quicksand" rel="stylesheet">
+    <style>
+        .single-product .product-img img {
+            height: 370px;
+        }
+
+        .newsletter_area {
+            padding-bottom: 50px;
+        }
+
+        .newsletter_parallax {
+            display: table-cell;
+            vertical-align: middle;
+            width: 100%;
+        }
+
+        .newsletter_text {
+            color: #fefefe;
+        }
+
+        .newsletter_text h2 {
+            font-size: 30px;
+            position: relative;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        .newsletter_text h2:before {
+            position: absolute;
+            content: "";
+            top: 40px;
+            left: 50%;
+            width: 50px;
+            height: 4px;
+            margin-left: -25px;
+            background: #ffffff;
+        }
+
+        .newsletter_text p {
+            font-size: 14px;
+            padding: 30px 0;
+            font-family: 'Raleway', sans-serif;
+        }
+
+        .mail_box {
+            margin-bottom: 36px;
+        }
+
+        .mail_box form input {
+            background-color: transparent;
+            border: 1px solid #fff;
+            border-right: 0px;
+            padding: 15px;
+            width: calc(100% - 125px);
+            float: left;
+        }
+
+        .social_icons i {
+            font-size: 18px;
+            color: #efefef;
+            border: 1px solid #fff;
+            height: 38px;
+            width: 38px;
+            margin: 0px 6px;
+            padding-top: 10px;
+            transition: all 0.6s ease 0s;
+            -webkit-transition: all 0.6s ease 0s;
+            -moz-transition: all 0.6s ease 0s;
+            -o-transition: all 0.6s ease 0s;
+        }
+
+        .widget {
+            margin-bottom: 30px;
+            margin-top: 50px;
+        }
+
+        .sidebar-title {
+            border: 1px solid #dedede;
+            color: #333;
+            display: block;
+            height: 52px;
+            line-height: 51px;
+            margin: 0;
+            padding: 0 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .sidebar-product {
+            border: 1px solid #dedede;
+            border-top: 0;
+            padding: 20px;
+        }
+
+        .sidebar-product .single-product {
+            margin-bottom: 15px;
+        }
+
+        .single-product {
+            overflow: hidden;
+        }
+
+        .sidebar-product .product-photo {
+            float: left;
+            width: 36%;
+        }
+
+        .product-photo {
+            position: relative;
+        }
+
+        .product-photo > a {
+            display: block;
+            position: relative;
+            z-index: 1;
+            -webkit-transition: all 0.3s ease 0s;
+            text-decoration: none;
+            color: #323232;
+        }
+
+        .product-photo img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .sidebar-product .product-brief {
+            float: right;
+            margin-top: 0;
+            padding-left: 15px;
+            text-align: left;
+            width: 64%;
+        }
+
+        .sidebar-product .product-brief h2 {
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 20px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-product .product-brief h3 {
+            font-size: 14px;
+            line-height: 20px;
+            color: #111111;
+            text-transform: uppercase;
+        }
+
+        .sidebar-product .product-brief span {
+            color: #999999;
+            padding-left: 5px;
+            text-decoration: line-through;
+        }
+
+        .right-search:focus {
+            width: 75%;
+            border: 1px solid #c06b81;
+        }
+
+        .col1 {
+            margin-top: 12px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .textbox {
+            width: 250px;
+            padding: 4px 2px;
+            font: 14px/27px "Lato", Arial, sans-serif;
+            color: #333;
+            box-sizing: border-box;
+            letter-spacing: 1px;
+            border: 0;
+            border: 1px solid #ccc;
+            transition: 0.4s;
+            background: transparent;
+        }
+
+        .textbox ~ .focus-border:before,
+        .textbox ~ .focus-border:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background-color: #232323;
+            transition-delay: 0.2s;
+        }
+
+        .textbox ~ .focus-border:after {
+            top: auto;
+            bottom: 0;
+            right: auto;
+            left: 0;
+            transition-delay: 0.6s;
+        }
+
+        .textbox ~ .focus-border i:before,
+        .textbox ~ .focus-border i:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 0;
+            background-color: #232323;
+            transition: 0.2s;
+        }
+
+        .textbox ~ .focus-border i:after {
+            left: auto;
+            right: 0;
+            top: auto;
+            bottom: 0;
+            transition-delay: 0.4s;
+        }
+
+        .textbox:focus ~ .focus-border:before,
+        .textbox:focus ~ .focus-border:after,
+        .has-content.textbox ~ .focus-border:before,
+        .has-content.textbox ~ .focus-border:after {
+            width: 100%;
+            transition: 0.2s;
+            transition-delay: 0.6s;
+        }
+
+        .textbox:focus ~ .focus-border:after,
+        .has-content.textbox ~ .focus-border:after {
+            transition-delay: 0.2s;
+        }
+
+        .textbox:focus ~ .focus-border i:before,
+        .textbox:focus ~ .focus-border i:after,
+        .has-content.textbox ~ .focus-border i:before,
+        .has-content.textbox ~ .focus-border i:after {
+            height: 100%;
+            transition: 0.2s;
+        }
+
+        .textbox:focus ~ .focus-border i:after,
+        .has-conten.textbox ~ .focus-border i:after {
+            transition-delay: 0.4s;
+        }
+
+        .textbox ~ label {
+            text-align: left;
+            position: absolute;
+            left: 0px;
+            width: 100%;
+            top: -20px;
+            color: #aaa;
+            transition: 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .textbox:focus ~ label,
+        .has-content.textbox ~ label {
+            top: -18px;
+            left: 0;
+            font-size: 12px;
+            color: #3399FF;
+            transition: 0.3s;
+        }
+
+        .textbox:focus {
+            outline: none;
+        }
+
+        .button-filter {
+            border-radius: 0px;
+            background-color: #232323;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 16px;
+            padding: 20px;
+            width: 150px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .button-filter span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .button-filter span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+
+        .button-filter:hover span {
+            padding-right: 25px;
+        }
+
+        .button-filter:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+
+        .button-filter:hover {
+            background: #c06b81;
+        }
+
+        .fade {
+            opacity: 1;
+        }
+
+        .left-column-block {
+            font-family: 'Quicksand', sans-serif;
+        }
+    </style>
+    <script>
+        function hide() {
+            var modal = document.getElementById('add-Modal');
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var modal = document.getElementById('add-Modal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        $(document).ready(function () {
+            $('.divAddCart').on('click', function () {
+                var getItemId = parseInt($(this).attr('id').replace(/add_cart_/, ''));
+
+                console.log(getItemId);
+                //var getUserName = $('.divName').html();
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/AddCart',
+                    dataType: 'json',
+                    data: JSON.stringify({ ItemId: getItemId }),
+                    success: function (data) {
+                        $('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        $('.name-product-addcart').text(data.TenSanPham);
+                        $('#price-product-addcart').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+                        var span = $(".countcart");
+                        span.html(parseInt(span.html()) + 1);
+                        $('#add-Modal').css("display", "block");
+                        loadHeaderCart();
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('.btn-adlist').on('click', function () {
+                var getItemId = parseInt($(this).attr('id').replace(/add-wishlist-/, ''));
+
+                //var getUserName = $('.divName').html();
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/AddWihsList',
+                    dataType: 'json',
+                    data: JSON.stringify({ id: getItemId }),
+                    success: function (data) {
+                        console.log(data);
+                        //$('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        //$('.name-product-addcart').text(data.TenSanPham);
+                        //$('#price-product-addcart').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+                        var span = $(".countwish");
+                        span.html(parseInt(span.html()) + 1);
+                        //$('#add-Modal').css("display", "block");
+                        //loadHeaderCart();
+                        //loadNumberCart();
+
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('.modal-product').on('click', function () {
+                var UpdateItem = parseInt($(this).attr('id').replace(/quick_view_/, ''));
+                //var getUserName = $('.divName').html();
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/loadModal',
+                    dataType: 'json',
+                    data: JSON.stringify({ id: UpdateItem }),
+                    success: function (data) {
+                        //var span = $(".countcart");
+                        //span.html(parseInt(span.html()) + 1);
+                        $("#modal-name").text(data.TenSanPham);
+                        $('#modal-procer').text(data.TenNhaSanXuat);
+                        $('#modal-option').text(data.TenLoaiSanPham);
+                        $('.price-box1').text(data.Gia);
+                        $("#modal-details").text(data.MoTa);
+                        $("#modal-quantity").text(data.SoLuongTon);
+                        $('.exclusive').attr('id', 'modal_' + data.ID);
+                        $('#img-modal').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        if (data.SoLuongTon <= 0) {
+                            $('#modal_' + UpdateItem + '').attr('disabled', "disabled");
+                            $('#modal_' + UpdateItem + '').css("cursor", "not-allowed");
+                        }
+                        if (data.SoLuongTon > 0) {
+                            $('#modal_' + UpdateItem + '').removeAttr('disabled');
+                            $('#modal_' + UpdateItem + '').css("cursor", "pointer");
+                        }
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('.exclusive').on('click', function () {
+                var getItemId = parseInt($(this).attr('id').replace(/modal_/, ''));
+
+                console.log(getItemId);
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/TrangChu/AddCart',
+                    dataType: 'json',
+                    data: JSON.stringify({ ItemId: getItemId }),
+                    success: function (data) {
+                        $('#img-addcart').attr('src', '/Assets/HinhAnh/' + data.ID + '/' + data.HinhAnh + '');
+                        $('.name-product-addcart').text(data.TenSanPham);
+                        $('#price-product-addcart').text(parseFloat(data.Gia, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+                        var span = $(".countcart");
+                        span.html(parseInt(span.html()) + 1);
+                        $('#add-Modal').css("display", "block");
+                        $('#add-Modal').css("z-index", '100000000');
+                        loadHeaderCart();
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+                return false;
+            });
+        });
+
+        //function check(name) {
+        //    var ele = document.getElementsByName(name);
+        //    var flag = 0;
+        //    for (var i = 0; i < ele.length; i++) {
+        //        if (ele[i].checked || $('.textbox').val() != '')
+        //            flag = 1;
+        //    }
+        //    if (flag == 1)
+        //        document.getElementById('filter').disabled = false;
+        //}
+        //$('input[type="text"]').keyup(function () {
+        //    if ($('input[type="text"]').val() != "") {
+        //        $('#filter').removeAttr('disabled');
+        //    }
+        //})
+    </script>
+    </head>
+}
+
+<div class="shop-2-area">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="@Url.Action("Index", "TrangChu")" title="Return to Home">
+                <i class="icon-home"></i>
+            </a>
+            <span class="navigation-pipe">&gt;</span>
+            <span class="navigation-page">
+                Hiển thị sản phẩm
+            </span>
+            @*<input type="text" class="right-search" name="search" placeholder="Search.." style="float:right;">*@
+        </div>
+        <div class="row">
+            <div class="left-column col-sm-3">
+
+                <div class="left-column-block">
+                    @using (Html.BeginForm("SanPham", "MuaSam", new {  search = UrlParameter.Optional, id = "", minmoney = UrlParameter.Optional, maxmoney = UrlParameter.Optional, nsx = UrlParameter.Optional, dm = UrlParameter.Optional, tlsp = UrlParameter.Optional }, FormMethod.Get))
+                    {
+                        <h1>Bộ lọc</h1>
+
+                        <div class="block-content">
+                            <div class="content-box">
+                                <h3 class="content-box-heading">
+                                    Nhà sản xuất
+                                </h3>
+                                <ul>
+                                    @foreach (var a in Model.NhaSanXuat.Where(s => (s.BiXoa == false)))
+                                                {
+                                        <li>
+                                            <span class="checkit">
+                                                <input class="checkbox" type="radio" name="nsx" value="@a.TenNhaSanXuat" onclick="check('nsx')">
+                                            </span>
+                                            <label class="check-label">
+                                                <a href="#">@a.TenNhaSanXuat</a>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="content-box">
+                                <h3 class="content-box-heading">
+                                    Danh mục
+                                </h3>
+                                <ul>
+                                    @foreach (var a in Model.DanhMuc.Where(s => (s.BiXoa == false)))
+                                                    {
+                                        <li>
+                                            <span class="checkit">
+                                                <input class="checkbox" type="radio" name="dm" value="@a.TenDanhMuc" onclick="check('dm')">
+                                            </span>
+                                            <label class="check-label">
+                                                <a href="#">@a.TenDanhMuc</a>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div class="content-box">
+                                <h3 class="content-box-heading">
+                                    Loại sản phẩm
+                                </h3>
+                                <ul>
+                                    @foreach (var a in Model.LoaiSanPham.Where(s => (s.BiXoa == false)))
+                                                    {
+                                        <li>
+                                            <span class="checkit">
+                                                <input class="checkbox" type="radio" name="tlsp" value="@a.TenLoaiSanPham" onclick="check('tlsp')">
+                                            </span>
+                                            <label class="check-label">
+                                                <a href="#">@a.TenLoaiSanPham</a>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="col1">
+
+                                <input class="textbox" value="" min="@ViewBag.minvalue" name="minmoney" type="number" max="@ViewBag.maxvalue">
+                                <label>Giá bắt đầu</label>
+                                <span class="focus-border">
+                                    <i></i>
+                                </span>
+                            </div>
+                            <br><br>
+                            <div class="col1">
+                                <input class="textbox" value="" name="maxmoney" type="number" min="@ViewBag.minvalue" max="@ViewBag.maxvalue">
+                                <label>Giá kết thúc</label>
+                                <span class="focus-border">
+                                    <i></i>
+                                </span>
+                            </div>
+
+                            <div style="margin-top:20px;">
+                                @using (Html.BeginForm("SanPham", "MuaSam", FormMethod.Get))
+                                {
+                                    <button class="button-filter" type="submit" id="filter"><span>Lọc </span></button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+                @*<div class="left-column-block left-col-mar">
+                        <h1>Tags</h1>
+                        <div class="tags">
+                            <a href="#">Mới</a>
+                            <a href="#">Bàn</a>
+                            <a href="#">Ghế</a>
+                            <a href="#">aaa</a>
+                            <a href="#">accessories</a>
+                            <a href="#">lighting</a>
+                        </div>
+                    </div>*@
+                <aside class="widget top-rated hidden-sm">
+                    <h5 class="sidebar-title">sản phẩm nổi bật</h5>
+                    <div class="sidebar-product">
+
+                        @foreach (var item in Model.SanPham.Where(s => s.BiXoa == false).OrderByDescending(s => s.SoLuongBan).Take(5).ToList())
+                        {
+                            <div class="single-product">
+                                <div class="product-photo">
+                                    <a href="~/SanPham/ChiTiet/@item.ID">
+                                        <img class="primary-photo" src="~/Assets/HinhAnh/@item.ID/@item.HinhAnh" alt="">
+                                    </a>
+                                </div>
+                                <div class="product-brief">
+                                    <h2><a href="~/SanPham/ChiTiet/@item.ID">@item.TenSanPham</a></h2>
+                                    <h3>@string.Format("{0:n0}", item.Gia) &#x20ab</h3>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </aside>
+                @*<div style="margin-top:20px;">
+                        <img src="~/Content/img/body/sidebar-1.jpg" />
+                    </div>*@
+            </div>
+            <div class="col-sm-9">
+                <div class="shop-banner"></div>
+                @*<div class="shop-heading">
+                        <h2>bedding</h2>
+                        <span>There are 13 products.</span>
+                    </div>*@
+                <div class="clearfix"></div>
+                <div class="category-products">
+                    <div class="topbar-category">
+                        <div class="pager-area">
+                            <div>
+                                <!-- Nav tabs -->
+                                <ul class="shop-tab">
+                                    <li role="presentation" class="">
+                                        <a href="#gried_view" role="tab" data-toggle="tab"
+                                           aria-expanded="false">
+                                            <i class="fa fa-th-large"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="shop-category-product">
+                        <div class="row">
+                            <div class="category-product">
+                                <!-- Tab panes -->
+                                <div class="">
+                                    <div onload="loadList()" class="tab-pane fade" id="gried_view">
+                                        @{
+                                            var dem = 0;
+                                        }
+                                        @foreach (var item in Model.SanPham.Where(s => (s.BiXoa == false)))
+                                        {
+                                            dem++;
+
+                                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                                <div class="single-product">
+                                                    <div class="product-img">
+                                                        <a href="~/SanPham/ChiTiet/@item.ID">
+                                                            <img src="~/Assets/HinhAnh/@item.ID/@item.HinhAnh" alt="">
+                                                        </a>
+                                                        <span class="new">new</span>
+                                                        <span class="sale">sale!</span>
+                                                        <div class="product-action">
+                                                            <div class="add-to-links">
+                                                                <ul>
+
+                                                                    @if (Session["UserID"] != null)
+                                                                    {
+                                                                        if (item.TinhTrang == false || item.SoLuongTon == 0)
+                                                                        {
+                                                                            <li>
+                                                                                <a href="javascript:void(0)" style="pointer-events: none !important; cursor: crosshair; color: Gray;" id="add_cart_@item.ID" class="divAddCart" title="Add to cart">
+                                                                                    <i class="fa fa-shopping-cart"></i>
+                                                                                </a>
+                                                                            </li>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <li>
+                                                                                <a href="javascript:void(0)" id="add_cart_@item.ID" class="divAddCart" title="Add to cart">
+                                                                                    <i class="fa fa-shopping-cart"></i>
+                                                                                </a>
+                                                                            </li>
+                                                                        }
+                                                                        int a = Model.SanPhamYeuThich.Where(s => s.idSanPham == item.ID && (s.TaiKhoan.Email == Session["UserEmail"].ToString())).Count();
+                                                                        if (a == 0)
+                                                                        {
+                                                                            <li>
+                                                                                <button style="border: 1px solid white; background: transparent; padding: 15px; font-weight: bold;" type="button" class="btn-adlist btn-primary" id="add-wishlist-@item.ID" data-loading-text="Searching..." data-end-text="&#x2714;">
+                                                                                    @*<a href="javascript:void(0);" title="Add to wishlist">
+                                                                                            <i class="fa fa-heart"
+                                                                                               aria-hidden="true"></i>
+                                                                                        </a>*@
+                                                                                    &#x2764;
+                                                                                </button>
+                                                                                <script>
+                                                                                    $('#add-wishlist-@item.ID')
+                                                                                        .on("click",
+                                                                                            function() {
+                                                                                                $(
+                                                                                                        '#add-wishlist-@item.ID')
+                                                                                                    .button("load");
+                                                                                                setTimeout(function() {
+                                                                                                        $(
+                                                                                                                '#add-wishlist-@item.ID')
+                                                                                                            .button("end");
+                                                                                                        $(
+                                                                                                                '#add-wishlist-@item.ID')
+                                                                                                            .attr(
+                                                                                                                'disabled',
+                                                                                                                'disabled');
+                                                                                                    },
+                                                                                                    500);
+                                                                                            });
+                                                                                </script>
+                                                                            </li>
+                                                                        }
+                                                                        if (a != 0)
+                                                                        {
+                                                                            <li>
+                                                                                <button style="border: 1px solid white; background: transparent; padding: 15px; font-weight: bold; cursor: not-allowed;" disabled="true" type="button" class="btn-adlist btn-primary" id="add-wishlist-@item.ID" data-loading-text="Searching..." data-end-text="&#x2714;">
+                                                                                    @*<a href="javascript:void(0);" title="Add to wishlist">
+                                                                                            <i class="fa fa-heart"
+                                                                                               aria-hidden="true"></i>
+                                                                                        </a>*@
+                                                                                    &#x2714;
+                                                                                </button>
+                                                                            </li>
+
+                                                                        }
+                                                                    }
+                                                                    @if (Session["UserID"] == null)
+                                                                    {
+                                                                        <li style="display: none;">
+                                                                            <a href="javascript:void(0)" id="add_cart_@item.ID" class="divAddCart" title="Add to cart">
+                                                                                <i class="fa fa-shopping-cart"></i>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li style="display: none;">
+                                                                            <a style="display: none;" href="#" title="Add to wishlist">
+                                                                                <i class="fa fa-heart" aria-hidden="true"></i>
+                                                                            </a>
+                                                                        </li>
+                                                                    }
+
+                                                                    <li>
+                                                                        <a href="~/SanPham/ChiTiet/@item.ID" title="Add to compare">
+                                                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                                <div class="quick-view">
+                                                                    <a href="javascript:void(0)" class="modal-product" id="quick_view_@item.ID" data-toggle="modal" data-target="#myModal"
+                                                                       title="Quick view">
+                                                                        <span>Xem Trước</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-content">
+                                                        <h5 class="product-name">
+                                                            <a href="~/SanPham/ChiTiet/@item.ID" title="Printed Chiffon Dress">@item.TenSanPham</a>
+                                                        </h5>
+                                                        <div class="reviews">
+                                                            <div class="star-content clearfix">
+                                                                <span class="star star-on"></span>
+                                                                <span class="star star-on"></span>
+                                                                <span class="star star-on"></span>
+                                                                <span class="star star-on"></span>
+                                                                <span class="star star-on"></span>
+                                                            </div>
+                                                            <div class="comment">
+                                                                <span class="reviewcount">@Convert.ToInt32(item.LuotXem / 2) </span>
+                                                                lượt xem
+                                                            </div>
+                                                        </div>
+                                                        <div class="price-box">
+                                                            <span class="price"> @string.Format("{0:n0}", item.Gia) &#x20ab </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            if (dem % 3 == 0)
+                                            {
+                                                <div class="clearfix"></div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shop-pagination">
+                    <div class="row">
+                        @if (ViewBag.listproduct != 0)
+                        {
+                            <div class="col-md-6 col-xs-6">
+                                @*<div class="product-count">
+                                        Showing 1 - 12 of 13 items
+                                    </div>*@
+
+                                <ul class="pagination">
+
+                                    @if (ViewBag.curPage != 1)
+                                    {
+                                        <li class="pagination-previous-bottom">
+                                            <a href="?search=@ViewBag.s&nsx=@ViewBag.sanxuat&dm=@ViewBag.danhmucsp&tlsp=@ViewBag.tloaisp&minmoney=@ViewBag.Minmoney&maxmoney=@ViewBag.Maxmoney&page=@(ViewBag.curPage - 1)">
+                                                <i class="fa fa-angle-left"></i>
+                                            </a>
+                                        </li>
+                                    }
+                                    @for (int i = 1; i <= ViewBag.totalPage; i++)
+                                    {
+                                        if (ViewBag.curPage == i)
+                                        {
+                                            <li class="active current">
+                                                <a href="?search=@ViewBag.s&nsx=@ViewBag.sanxuat&dm=@ViewBag.danhmucsp&tlsp=@ViewBag.tloaisp&minmoney=@ViewBag.Minmoney&maxmoney=@ViewBag.Maxmoney&page=@i">
+                                                    @i
+                                                </a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="?search=@ViewBag.s&nsx=@ViewBag.sanxuat&dm=@ViewBag.danhmucsp&tlsp=@ViewBag.tloaisp&minmoney=@ViewBag.Minmoney&maxmoney=@ViewBag.Maxmoney&page=@i">@i</a></li>
+                                        }
+                                    }
+                                    @if (ViewBag.curPage != ViewBag.totalPage)
+                                    {
+                                        <li class="pagination-next-bottom">
+                                            <a href="?search=@ViewBag.s&nsx=@ViewBag.sanxuat&dm=@ViewBag.danhmucsp&tlsp=@ViewBag.tloaisp&minmoney=@ViewBag.Minmoney&maxmoney=@ViewBag.Maxmoney&page=@(ViewBag.curPage + 1)">
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-12" style="background: #dff0d8;
+    color: #3c763d;
+    text-align: center;
+    padding: 35px;
+    border-radius: 5px;
+    font-size: 20px;">
+                                <i style="margin-right:5px;" class="fa fa-times-circle" aria-hidden="true"></i><span>Sản phẩm bạn tiềm kiếm hiện tại không có.</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="newsletter_area" style="margin-top:40px;">
+    <div class="container">
+        <div class="row">
+            
+        </div>
+    </div>
+</section>
+@section modal{
+    <div id="add-Modal" class="modal1">
+
+        <!-- Modal content -->
+        <div class="modal-content1">
+            <div class="modal-header">
+                <span onclick='hide()' id="close-tab" class="close">&times;</span>
+                <h2 style="font-size:24px;">Sản phẩm đã được thêm vào giỏ hàng.</h2>
+            </div>
+            <div class="modal-body">
+                <img style="    width: 130px;" src="" id="img-addcart" />
+                <div style="position: absolute;top: 20px;left: 31%;">
+                    <p style="font-size:18px;" class="name-product-addcart">Tên sản phẩm</p>
+                    <p style="color: black;font-size: 18px;">Số lượng: 1</p>
+                    <span style="color:black;font-size: 18px;">Giá:</span> <span style="color: black;font-size: 18px;" id="price-product-addcart"> </span><span style="font-size:16px;"> &#x20ab</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="hide()" class="btn btn-primary">Tiếp tục mua sản phẩm</button>
+                <a href="~/MuaSam/GioHang"><button type="button" class="btn btn-success">Giỏ hàng</button></a>
+                <a href="~/MuaSam/ThanhToan"><button type="button" class="btn btn-info">Thanh toán</button></a>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-5 col-sm-5 col-xs-6">
+                        <div class="modal-pic ex1" title="Printed Chiffon Dress">
+                            <a href="#">
+                                <img class="zoomImg" id="img-modal" src="" alt="">
+                            </a>
+                            <span class="new">new</span>
+                            <span class="sale">sale</span>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-6">
+                        <h1 id="modal-name"></h1>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <p class="reference">
+                            <label>Nhà sản xuất: </label>
+                            <span id="modal-procer"></span>
+                        </p>
+                        <p class="condition">
+                            <label>Thể loại: </label>
+                            <span id="modal-option"></span>
+                        </p>
+                        <div class="content-price">
+                            <p class="price-new">
+                                <span class="price-box1"></span><span style="font-size: 35px;
+    margin-left: 4px;color: #c06b81;">&#x20ab</span>
+                                <span class="price-tax">.</span>
+                            </p>
+                        </div>
+                        <div class="short-description">
+                            <p id="modal-details">
+                            </p>
+                        </div>
+                        <form action="#">
+                            <div class="shop-product-add">
+                                @if (Session["UserID"] != null)
+                                {
+                                    <div class="add-cart">
+                                        <div class="shop-add-cart">
+                                            <button class="exclusive">
+                                                <span>Thêm vào giỏ</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="clearfix"></div>
+                            </div>
+                        </form>
+                        <div class="clearfix"></div>
+                        <p class="quantity-available">
+                            <span id="modal-quantity"></span>
+                            <span>Sản phẩm</span>
+                        </p>
+                        <p class="social-sharing">
+                            <button class="btn btn-default btn-twitter">
+                                <i class="icon-twitter"></i>
+                                Tweet
+                            </button>
+                            <button class="btn btn-default btn-facebook">
+                                <i class="icon-facebook"></i>
+                                Share
+                            </button>
+                            <button class="btn btn-default btn-google-plus">
+                                <i class="icon-google-plus"></i>
+                                Google+
+                            </button>
+                            <button class="btn btn-default btn-pinterest">
+                                <i class="icon-pinterest"></i>
+                                Pinterest
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Trang chủ</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,100,300,700,900" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300" rel="stylesheet" type="text/css">
+    <link href="~/Content/style.css" rel="stylesheet">
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    @RenderSection("css", false)
+</head>
+<body>
+    @Html.Action("_Header", "SanPham")
+    @RenderBody()
+    @RenderPage("~/Views/Shared/_Brand.cshtml")
+    @RenderPage("~/Views/Shared/_Footer.cshtml")
+    @RenderSection("modal", false)
+    @RenderPage("~/Views/Shared/_Modal.cshtml")
+    @RenderSection("Scripts",false)
+    
+    @RenderSection("js", false)
+</body>
+</html>

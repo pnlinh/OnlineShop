@@ -1,0 +1,70 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.DangNhapVM
+@{
+    ViewBag.Title = "QuenMatKhau";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <style>
+        .reset-email {
+            border: 1px solid #black;
+            display: block;
+            padding: 10px 10px;
+            width: 100%;
+            margin-bottom: 20px;
+
+        }
+        .form-email{
+            height:80%;
+        
+        }
+        .submit-mail .exclusive1 {
+            background: #363636 none repeat scroll 0 0;
+            border: 0 none;
+            color: white;
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            height: 35px;
+            line-height: 35px;
+            padding: 0 15px;
+            position: relative;
+            text-align: center;
+            text-transform: uppercase;
+            transition: all 300ms ease-in 0s;
+            float:right;
+        }
+        .submit-mail .exclusive:hover {
+            background: #ffb3b3;
+        }
+        .danger{
+            color:red;
+        }
+    </style>
+}
+
+@using (Html.BeginForm("QuenMatKhau", "TaiKhoan", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+<div class="form-email">
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-offset-3 " style="top:35%;">
+    <div style="color: black;
+    font-size: 15px;margin-bottom:20px;">
+        <p>Chào mừng bạn đến với trang lấy lại mật khẩu. Bạn quên mật khẩu? Hãy nhấp email mà bạn đăng nhập, liên kết sẽ được gửi đến.</p>
+    </div>
+    @Html.ValidationMessageFor(m=>m.Email, "", new { @class = "danger" })
+    @Html.TextBoxFor(m => m.Email, new { @class = "reset-email", placeholder = "Nhập email để reset mật khẩu." })
+    <div class="submit-mail">
+        <button class="exclusive1">
+            <span>Xác nhận</span>
+        </button>
+    </div>
+</div>
+</div>
+}
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

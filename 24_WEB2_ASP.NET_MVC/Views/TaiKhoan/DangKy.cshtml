@@ -1,0 +1,198 @@
+﻿@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "DangKy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <head>   
+        <script type="text/javascript">
+            function addRequestVerificationToken(data) {
+                data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+                return data;
+            };
+            $(document).ready(function () {
+                //Country Dropdown Selectedchange event
+                $("#Country").change(function () {
+                    $("#State").empty();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetStates","TaiKhoan")', // Calling json method
+                        dataType: 'json',
+                        data: addRequestVerificationToken({ id: $("#Country").val()}),
+                        // Get Selected Country ID.
+                        success: function (states) {
+                            $.each(states, function (i, state) {
+                                $("#State").append('<option value="' + state.Value + '">' +
+                                    state.Text + '</option>');
+                            });
+                        },
+                
+                    });
+                    return false;
+                })
+            });
+        </script>
+        <style>
+        /*.new-customers{*/
+        /*margin-left:50%;*/
+        /*}*/
+            .login-title {
+                font-size: 18px;
+                font-weight: bold;
+                line-height: 27px;
+                margin-bottom: 30px;
+                padding-bottom: 10px;
+                color: #333;
+                text-transform: uppercase;
+            }
+
+            .custom-form {
+                border: 1px solid #ccc;
+                color: #999;
+                display: block;
+                font-size: 14px;
+                height: 33px;
+                line-height: 16px;
+                margin-bottom: 20px;
+                padding: 0 10px 0 15px;
+                width: 100%;
+            }
+
+            .custom-select {
+                -moz-appearance: none;
+                background: #fff url(img/angle-down.png) no-repeat scroll 97% center;
+                font-weight: normal;
+                text-transform: capitalize;
+            }
+
+            .custom-select option {
+                padding: 4px 15px;
+            }
+
+            .checkbox label {
+                color: #999;
+                font-size: 13px;
+                line-height: 20px;
+                margin-right: 20px;
+            }
+
+            .lognin-area label {
+                display: inline-block;
+                font-weight: bold;
+                margin-bottom: 5px;
+                max-width: 100%;
+            }
+
+            .custom-submit, .lognin-area .custom-submit-2 {
+                background: #252525 none repeat scroll 0 0;
+                border: medium none;
+                color: #fff;
+                height: 33px;
+                line-height: 33px;
+                margin-top: 20px;
+                text-transform: uppercase;
+                transition: all 0.4s ease 0s;
+            }
+
+            .custom-submit:hover {
+                background: #f6416c none repeat scroll 0 0;
+                color: #fff;
+            }
+
+            .danger {
+                color: red;
+                font-size: 15px;
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+}
+
+
+
+    <div class="container">
+        <div class="col-md-6 col-md-offset-3" style="margin-top:30px;">
+@using (Html.BeginForm("DangKy", "TaiKhoan", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+                <div class="new-customers">
+                    <h2 class="login-title">Người dùng mới</h2>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.ValidationMessageFor(m => m.TestTwo.Name, "", new { @class = "danger" })
+                            @Html.TextBoxFor(m => m.TestTwo.Name, new { @class = "custom-form", placeholder = "Họ và tên đệm" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.ValidationMessageFor(m => m.TestTwo.Address, "", new { @class = "danger" })
+                            @Html.TextBoxFor(m => m.TestTwo.Address, new { @class = "custom-form", placeholder = "Địa chỉ, số nhà..." })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!--<select class="custom-select custom-form">
+                                <option>Thành phố/Tỉnh</option>
+                                <option>Tp.HCM</option>
+                                <option>Hà nội</option>
+                                <option>Bình Thuận</option>
+                            </select>-->
+                            <div>
+                                @Html.ValidationMessageFor(m => m.TestOne.ID, "", new { @class = "danger" })
+                            </div>
+                            @Html.DropDownListFor(m => m.TestOne.ID, ViewBag.Country as SelectList, "-- Chọn tỉnh-thành phố  --", new { @class = "custom-select custom-form", id = "Country", @style = "margin-top:30px" })
+                        </div>
+                        <div class="col-sm-6">
+                            <div>
+                                @Html.ValidationMessageFor(m => m.TestThree.ID, "", new { @class = "danger" })
+                            </div>
+                            @Html.DropDownListFor(m => m.TestThree.ID, new SelectList(string.Empty, "Value", "Text"), "-- Chọn quận-huyện-thị xã --",
+     new { @class = "custom-select custom-form", id = "State", @style = "margin-top:30px" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.ValidationMessageFor(m => m.TestTwo.Phone, "", new { @class = "danger" })
+                            @Html.TextBoxFor(m => m.TestTwo.Phone, new { @class = "custom-form", placeholder = "Số điện thoại" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.ValidationMessageFor(m => m.TestTwo.Email, "", new { @class = "danger" })
+                            @Html.TextBoxFor(m => m.TestTwo.Email, new { @class = "custom-form", placeholder = "Nhập email muốn đăng ký" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.ValidationMessageFor(m => m.TestTwo.Pass, "", new { @class = "danger" })
+                            @Html.TextBoxFor(m => m.TestTwo.Pass, new { @class = "custom-form", placeholder = "Nhập mật khẩu", Type = "password" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.ValidationMessageFor(m => m.TestTwo.Confirm, "", new { @class = "danger" })
+                            @Html.TextBoxFor(m => m.TestTwo.Confirm, new { @class = "custom-form", placeholder = "Nhập lại mật khẩu", Type = "password" })
+                        </div>
+                    </div>
+                    <div class="checkbox" style="margin-bottom:30px;">
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="submit" name="Command" class="custom-form custom-submit no-margin" value="Đăng ký">
+                        </div>
+                        @*<div class="col-sm-6">
+                            <input type="submit" name="Command1" class="custom-form custom-submit no-margin" value="Làm mới">
+                        </div>*@
+
+                    </div>
+                </div>
+}
+        </div>
+    </div>
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

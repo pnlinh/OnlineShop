@@ -1,0 +1,71 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "ChiTietHoaDon";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("ChiTietHoaDon", "LichSu",new {id=UrlParameter.Optional }, FormMethod.Get))
+{
+<div class="container">
+    <div class="row">
+        <div class="grid">
+            <h2>Chi tiết hóa đơn</h2>
+            <hr>
+            <div class="grid__item two-thirds medium-down--one-whole">
+                <h4>Hóa đơn: @Model.HoaDon.ID</h4>
+                <p>Ngày đặt: @Model.HoaDon.NgayDat</p>
+
+                <div class="table-wrap">
+                    <table class="full">
+                        <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Hình ảnh</th>
+                                <th>Giá</th>
+                                <th class="text-right">Số lượng</th>
+                                <th class="text-right">Tổng tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ChiTiet)
+                                {
+                            <tr>
+                                <td><a href="~/SanPham/ChiTiet/@item.SanPham.ID">@item.SanPham.TenSanPham</a>
+                                </td>
+                                <td><a href="~/SanPham/ChiTiet/@item.SanPham.ID"><img src="~/Assets/HinhAnh/@item.SanPham.ID/@item.SanPham.HinhAnh"  style="width:70px;"/></a></td>
+                                <td>@string.Format("{0:n0}", item.SanPham.Gia) &#x20ab</td>
+                                <td class="text-right">@item.SoLuong</td>
+                                <td class="text-right">@string.Format("{0:n0}", item.DonGia*item.SoLuong) &#x20ab</td>
+                            </tr>
+                                }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">Tổng hóa đơn</td>
+                                <td class="text-right">@string.Format("{0:n0}", Model.HoaDon.TongTien) &#x20ab</td>
+                            </tr>
+
+                           
+
+                            <tr>
+                                <td colspan="4"><strong>Tổng cộng</strong></td>
+                                <td class="text-right"><strong> @string.Format("{0:n0}", Model.HoaDon.TongTien) &#x20ab </strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="grid__item one-third medium-down--one-whole">
+                <h4>Thông tin người nhận</h4>
+                <p>Tên: @Model.GiaoHang.TenKhachHang</p>
+                <p>Số điện thoại: @Model.GiaoHang.Phone</p>
+                <p>Email: @Model.GiaoHang.Email</p>
+                <p>Yêu cầu: @Model.GiaoHang.YeuCau</p>
+                <h4>Địa chỉ giao hàng</h4>
+                <p><strong>@Model.GiaoHang.DiaChi</strong></p>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+}

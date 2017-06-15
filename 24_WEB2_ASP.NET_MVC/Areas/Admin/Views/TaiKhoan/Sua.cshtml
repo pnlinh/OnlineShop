@@ -1,0 +1,67 @@
+﻿@model _24_WEB2_ASP.NET_MVC.Models.TaiKhoan
+
+@{
+    ViewBag.Title = "Tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section name
+{
+    Tài khoản
+    <small>Sửa</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Tài khoản", "DanhSach", "TaiKhoan")</li>
+    <li class="active">Sửa</li>
+}
+
+<div class="col-md-6 col-md-offset-3">
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">Sửa tài khoản</h3>
+        </div>
+
+        <form class="form-horizontal" action="" method="post">
+            <div class="box-body">
+
+                <div class="form-group">
+                    <label for="" class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="" value="@Model.Email" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="" class="col-sm-2 control-label">Họ tên</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="" value="@Model.Name" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="" class="col-sm-2 control-label">Phân quyền</label>
+                    <div class="col-sm-10">
+                        <div class="radio">
+                            <label>
+                                <input @if(Model.PhanQuyen == true) { @Html.Raw("checked") } type="radio" name="PhanQuyen" id="" value="true">
+                                Admin
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                                <input @if(Model.PhanQuyen == false) { @Html.Raw("checked") } type="radio" name="PhanQuyen" id="" value="false">
+                                Khách hàng
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-info">Lưu thay đổi</button>
+            </div>
+        </form>
+    </div>
+</div>

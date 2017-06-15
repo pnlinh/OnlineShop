@@ -1,0 +1,80 @@
+﻿@model _24_WEB2_ASP.NET_MVC.Models.Danh_Muc
+
+@{
+    ViewBag.Title = "Danh Mục";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section name
+{
+    Danh mục
+    <small>Sửa</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Danh Mục", "DanhSach", "DanhMuc")</li>
+    <li class="active">Sửa</li>
+}
+
+<div class="col-md-6 col-md-offset-3">
+    <div class="box box-primary">
+
+        <form action="" method="post" id="frmSuaDanhMuc">
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="TenDanhMuc">Tên danh mục</label>
+                    <div class="danhmuc">
+                        <input type="text" class="form-control" id="TenDanhMuc" name="TenDanhMuc" value="@Model.TenDanhMuc">
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Lưu lại</button>
+                <button type="reset" class="btn btn-danger" style="margin-left: 35px;">Hủy bỏ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section js
+{
+    <script src="~/Assets/admin/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            $('#frmSuaDanhMuc').validate({
+                rules: {
+                    TenDanhMuc: {
+                        required: true,
+                        minlength: 2
+                    }
+                },
+                messages: {
+                    TenDanhMuc: {
+                        required: 'Hãy nhập tên danh mục',
+                        minlength: 'Tên danh mục phải từ 2 kí tự trở lên'
+                    }
+                },
+                errorElement: "em",
+                errorPlacement: function (error, element) {
+                    error.addClass("help-block");
+
+                    if (element.prop("type") === "checkbox") {
+                        error.insertAfter(element.parent("label"));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+
+                highlight: function (element, errorClass, validClass) {
+                    $(element).parents(".danhmuc").addClass("has-error").removeClass("has-success");
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).parents(".danhmuc").addClass("has-success").removeClass("has-error");
+                }
+
+            });
+        });
+    </script>
+}

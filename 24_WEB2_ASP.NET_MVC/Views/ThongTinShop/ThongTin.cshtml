@@ -1,0 +1,232 @@
+﻿
+@{
+    ViewBag.Title = "ThongTin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <style>
+        h4.cart-title {
+            border-bottom: 1px solid #d6d4d4;
+            color: #555454;
+            font-family: "Open Sans",sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 22px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            padding: 0 0 17px;
+            text-transform: uppercase;
+            margin: 0 0 15px;
+        }
+
+        #googleMap {
+            width: 100%;
+            height: 430px;
+        }
+
+        .gm-style {
+            font: 400 11px Roboto, Arial, sans-serif;
+            text-decoration: none;
+        }
+
+        .contact-from-atea {
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .contactDetails {
+            overflow: hidden;
+        }
+
+        .contactHead > h3 {
+            color: #282828;
+            font-family: "Open Sans",sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 26px;
+            text-transform: uppercase;
+            margin: 0 0 15px;
+        }
+
+        .contactDetails > p {
+            color: #282828;
+            font-size: 14px;
+            margin-bottom: 35px;
+        }
+
+        span.iconContact {
+            border: 1px solid #282828;
+            display: block;
+            float: left;
+            font-size: 25px;
+            height: 50px;
+            line-height: 50px;
+            margin-right: 10px;
+            text-align: center;
+            transition: all 0.3s ease 0s;
+            width: 50px;
+        }
+
+        .social-area {
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: outside none none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .socila-icon > li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .socila-icon a {
+            color: #000;
+            border: 1px solid #ddd;
+            display: block;
+            font-size: 25px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            transition: all 0.3s ease 0s;
+            width: 50px;
+        }
+
+        .contactfrom input[type="text"] {
+            height: 42px;
+            border: 1px solid #e6e4e4;
+            outline-color: #ccc;
+            transition: all 0.3s ease 0s;
+        }
+
+        .contactfrom input.form-control {
+            border-radius: 0;
+            color: #a5a5a5;
+            font-family: Arial;
+            font-size: 14px;
+            font-weight: normal;
+            margin-bottom: 25px;
+            max-width: 100%;
+        }
+
+        .contactfrom h3 {
+            color: #282828;
+            font-family: "Open Sans",sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 26px;
+            text-transform: uppercase;
+        }
+
+        .contactfrom input.form-control {
+            border: 1px solid #d7d7d7;
+            border-radius: 0;
+            color: #a5a5a5;
+            font-family: Arial;
+            font-size: 14px;
+            font-weight: normal;
+            margin-bottom: 25px;
+            height: 50px;
+        }
+
+        .contactfrom textarea.form-control {
+            border-radius: 0;
+            font-family: Arial;
+            height: auto;
+            margin-bottom: 28px;
+            max-width: 100%;
+            border: 1px solid #e6e4e4;
+        }
+
+        .btn.btnContact {
+            background: #333 none repeat scroll 0 0;
+            border-radius: 0;
+            color: #fff;
+            font-size: 14px;
+            height: 50px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            transition: all 0.3s ease 0s;
+        }
+
+        .btnContact:hover {
+            background: #ffb3b3;
+        }
+
+        .iconContact:hover {
+            background: #ffb3b3;
+            color: #fff;
+        }
+
+        .socila-icon a:hover {
+            background: #ffb3b3;
+            color: white;
+        }
+    </style>
+</head>
+<div class="container" style="margin-top:50px;">
+    <!-- Start contact-map -->
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <h4 class="cart-title">Liên hệ chúng tôi</h4>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.260199806381!2d106.66074074955695!3d10.7913724618327!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752932ca384243%3A0x7f37674de66eabe!2zU2hvcCBRdeG6p24gw4FvIEJpZyBTaXpl!5e0!3m2!1svi!2s!4v1491132224669" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+    </div>
+    <!-- End contact-map -->
+    <!-- Start contact from atea -->
+    <div class="contact-from-atea">
+        <div class="form-and-info">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <div class="contactDetails contactHead">
+                        <h3>thông tin liên lạc</h3>
+                        <p>
+                            <span class="iconContact"><i class="fa fa-map-marker"></i></span>
+                            Shop Quần Áo Big Size, Hoàng Sa, phường 5, Tân Bình  <br> Hồ Chí Minh, Việt Nam.
+                        </p>
+                        <p>
+                            <span class="iconContact"><i class="fa fa-phone"></i></span>
+                            Di Động: +(84) 1659 987 960 <br> Bàn: (+84) 38 870 871
+                        </p>
+                        <p>
+                            <span class="iconContact"><i class="fa fa-envelope-o"></i></span>
+                            Email: nguyenbatranvan96@gmail.com <br> Website: www.ltvshop.com
+                        </p>
+                    </div>
+                    <div class="social-area contactHead">
+                        <h3>Theo dõi chúng tôi</h3>
+                        <ul class="socila-icon">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-8">
+                    <div class="contactfrom">
+                        <h3>Tin nhắn</h3>
+                        <form class="">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" placeholder="Full name" id="InputName" class="form-control">
+                                </div>
+                                <div class="col-md-6 contactemail">
+                                    <input type="email" placeholder="Email" id="InputEmail" class="form-control">
+                                </div>
+                                <div class="col-md-12">
+                                    <textarea placeholder="Massage" rows="13" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <button class="btn btnContact" type="submit">Gửi thư</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End contact from atea -->
+</div>
+

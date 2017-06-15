@@ -1,0 +1,322 @@
+﻿@{
+    ViewBag.Title = "Thống kê";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section name
+{
+    Trang chủ
+    <small>Thống kê</small>
+}
+
+@section path
+{
+    <li class="active">Thống kê</li>
+}
+
+<div class="col-md-12">
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <strong>Doanh thu theo sản phẩm</strong>
+            </h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="chartContainer5" style="width: 100%; height: 300px; display: inline-block;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <strong>Doanh thu theo tháng</strong>
+            </h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="chartContainer1" style="width: 100%; height: 300px; display: inline-block;"></div>
+        </div>
+    </div>
+
+    <div class="box box-danger">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <strong>Doanh thu theo hãng sản xuất</strong>
+            </h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="chartContainer2" style="width: 100%; height: 300px; display: inline-block;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="box box-success">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <strong>Doanh thu theo loại sản phẩm</strong>
+            </h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="chartContainer3" style="width: 100%; height: 300px; display: inline-block;"></div>
+        </div>
+    </div>
+
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <strong>Doanh thu theo danh mục</strong>
+            </h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="chartContainer4" style="width: 100%; height: 300px; display: inline-block;"></div>
+        </div>
+    </div>
+</div>
+
+@section js
+{
+    <script src="~/Assets/admin/canvasjs.min.js"></script>
+
+    <script>
+        $(function() {
+
+            //Doanh thu theo sản phẩm
+            $.ajax({
+                url: '@Url.Action("DoanhThuTheoSanPham", "TrangChu")',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var dataPoints = [];
+
+                    $.each(data,
+                        function(key, data) {
+                            dataPoints.push({ label: data.TenSP, y: data.TongTien});
+                        });
+
+                    var chart = new CanvasJS.Chart("chartContainer5",
+                        {
+                            title: {
+//                                text: "Doanh thu theo loại sản phẩm"                            
+                            },
+                            axisY:
+                            {
+                                valueFormatString: "#,###.##",
+                                suffix: ' đ'
+                            },
+                            dataPointWidth: 60,
+                            data: [
+                                {
+                                    type: "column",
+                                    indexLabelLineThickness: 2,
+                                    dataPoints: dataPoints
+                                }
+                            ]
+                        });
+                    chart.render();
+                }
+            });
+
+
+            //Doanh thu từng tháng
+            $.ajax({
+                url: '@Url.Action("DoanhThuTheoThang", "TrangChu")',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+
+                    var chart = new CanvasJS.Chart("chartContainer1",
+                        {
+                            title: {
+//                                text: "Doanh thu bán hàng theo tháng"
+                            
+                            },
+                            axisY:
+                            {
+                                valueFormatString: "#,###.##",
+                                suffix: ' đ'
+                            },
+                            data: [
+                                {
+                                    type: "line",
+
+                                    dataPoints: [
+                                        { x: new Date(2017, 00, 1), y: JSON.parse(data[0].TongTien) },
+                                        { x: new Date(2017, 01, 1), y: JSON.parse(data[1].TongTien) },
+                                        { x: new Date(2017, 02, 1), y: JSON.parse(data[2].TongTien) },
+                                        { x: new Date(2017, 03, 1), y: JSON.parse(data[3].TongTien) },
+                                        { x: new Date(2017, 04, 1), y: JSON.parse(data[4].TongTien) },
+                                        { x: new Date(2017, 05, 1), y: JSON.parse(data[5].TongTien) },
+                                        { x: new Date(2017, 06, 1), y: JSON.parse(data[6].TongTien) },
+                                        { x: new Date(2017, 07, 1), y: JSON.parse(data[7].TongTien) },
+                                        { x: new Date(2017, 08, 1), y: JSON.parse(data[8].TongTien) },
+                                        { x: new Date(2017, 09, 1), y: JSON.parse(data[9].TongTien) },
+                                        { x: new Date(2017, 10, 1), y: JSON.parse(data[10].TongTien) },
+                                        { x: new Date(2017, 11, 1), y: JSON.parse(data[11].TongTien) }
+                                    ]
+                                }
+                            ]
+                        });
+                    chart.render();
+                }
+            });
+
+            //Doanh thu theo hãng
+            $.ajax({
+                url: '@Url.Action("DoanhThuTheoHang", "TrangChu")',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+
+                    var dataPoints = [];
+
+                    $.each(data,
+                        function(key, data) {
+                            dataPoints.push({ label: data.NhaSX, y: data.TongTien, markerColor: "red" });
+                        });
+
+                    var chart = new CanvasJS.Chart("chartContainer2",
+                        {
+                            title: {
+//                                text: "Doanh thu theo hãng sản xuất"
+                            
+                            },
+                            axisY:
+                            {
+                                valueFormatString: "#,###.##",
+                                suffix: ' đ'
+                            },
+                            data: [
+                                {
+                                    type: "spline",
+                                    markerSize: 10,
+                                    dataPoints: dataPoints
+                                }
+                            ]
+                        });
+                    chart.render();
+                }
+            });
+
+            //Doanh thu theo loại
+            $.ajax({
+                url: '@Url.Action("DoanhThuTheoLoai", "TrangChu")',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+
+                    var dataPoints = [];
+
+                    $.each(data,
+                        function(key, data) {
+                            dataPoints.push({ label: data.LoaiSP, y: data.TongTien, markerColor: "red" });
+                        });
+
+                    var chart = new CanvasJS.Chart("chartContainer3",
+                        {
+                            title: {
+//                                text: "Doanh thu theo loại sản phẩm"
+                            
+                            },
+                            axisY:
+                            {
+                                valueFormatString: "#,###.##",
+                                suffix: ' đ'
+                            },
+                            dataPointWidth: 30,
+                            data: [
+                                {
+                                    type: "column",
+                                    indexLabelLineThickness: 2,
+                                    dataPoints: dataPoints
+                                }
+                            ]
+                        });
+                    chart.render();
+                }
+            });
+
+            //Doanh thu theo danh mục
+            $.ajax({
+                url: '@Url.Action("DoanhThuTheoDanhMuc", "TrangChu")',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+
+                    var dataPoints = [];
+
+                    $.each(data,
+                        function(key, data) {
+                            dataPoints.push({ y: data.TongTien, indexLabel: data.DanhMuc });
+                        });
+
+                    var chart = new CanvasJS.Chart("chartContainer4",
+                        {
+                            theme: "theme2",
+                            title: {
+                                // text: "Gaming Consoles Sold in 2012"
+                            
+                            },
+                            axisY:
+                            {
+                                valueFormatString: "#,###.##",
+                                suffix: ' đ'
+                            },
+                            data: [
+                                {
+                                    type: "pie",
+                                    showInLegend: true,
+                                    toolTipContent: "{y} đ - #percent %",
+                                    //yValueFormatString: "#0.#,,. Million",
+                                    legendText: "{indexLabel}",
+                                    dataPoints: dataPoints
+                                }
+                            ]
+                        });
+                    chart.render();
+                }
+            });
+        });
+    </script>
+}

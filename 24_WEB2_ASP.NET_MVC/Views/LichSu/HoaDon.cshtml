@@ -1,0 +1,97 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "HoaDon";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-xs-12 order-history">
+            <h1>Lịch sử đặt hàng</h1>
+            <hr>
+            <div class="order_details nrbdtl">
+                <h4>Danh Sách</h4>
+                <div class="table-wrap">
+                   
+                    <table class="full">
+                        <thead>
+                            <tr>
+                                <th>Mã hóa đơn</th>
+                                <th>Ngày đặt</th>
+                                <th>Số lượng sản phẩm</th>
+                                <th>Tổng tiền</th>
+                                <th style="text-align:center">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ListHoaDon)
+                            {
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.NgayDat</td>
+                                <td>@item.SoLuong</td>
+                                <td>@string.Format("{0:n0}", item.TongTien) &#x20ab</td>
+                                <td class="view-order">
+                                    <a href="~/LichSu/ChiTietHoaDon/@item.ID"><button><i class="fa fa-eye fa-2x" aria-hidden="true"></i></button></a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="shop-pagination">
+                        <div class="row">
+                            @if (ViewBag.listproduct != 0)
+                            {
+                                <div class="col-md-6 col-xs-6 col-sm-offset-3">
+                                    @*<div class="product-count">
+                            Showing 1 - 12 of 13 items
+                        </div>*@
+
+                                    <ul class="pagination">
+
+                                        @if (ViewBag.curPage != 1)
+                                        {
+                                            <li class="pagination-previous-bottom">
+                                                <a href="?page=@(ViewBag.curPage - 1)">
+                                                    <i class="fa fa-angle-left"></i>
+                                                </a>
+                                            </li>
+                                        }
+                                        @for (int i = 1; i <= ViewBag.totalPage; i++)
+                                        {
+                                            if (ViewBag.curPage == i)
+                                            {
+                                                <li class="active current">
+                                                    <a href="?page=@i">
+                                                        @i
+                                                    </a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li><a href="?page=@i">@i</a></li>
+                                            }
+                                        }
+                                        @if (ViewBag.curPage != ViewBag.totalPage)
+                                        {
+                                            <li class="pagination-next-bottom">
+                                                <a href="?page=@(ViewBag.curPage + 1)">
+                                                    <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </li>
+                                        }
+
+                                    </ul>
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+

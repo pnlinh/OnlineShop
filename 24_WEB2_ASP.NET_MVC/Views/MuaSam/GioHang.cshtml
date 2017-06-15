@@ -1,0 +1,203 @@
+﻿
+@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "GioHang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <style>
+        td {
+            text-align: center;
+        }
+    </style>
+}
+
+@section js
+{
+    <script>
+    
+        $(document).delegate('.cartDel', 'click', function () {
+            var DeleteItemId = parseInt($(this).closest('a').prop('id'));
+            console.log(DeleteItemId);
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: '/TrangChu/DeleteCart',
+                data: JSON.stringify({ itemId: DeleteItemId }),
+                success: function (data) {
+                    $('#' + data).parents('tr').remove();
+                    var span = $(".countcart");
+                    span.html(parseInt(span.html()) - 1);
+                    loadHeaderCart();
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+
+        //$(document).ready(function () {
+        //    $('.updatecart').on('click', function () {
+        //        var UpdateItem = parseInt($(this).attr('id').replace(/update_cart_/, ''));
+        //        console.log(UpdateItem);
+        //        //var getUserName = $('.divName').html();
+        //        $.ajax({
+        //            type: 'POST',
+        //            contentType: 'application/json; charset=utf-8',
+        //            url: '/TrangChu/UpdateCart',
+        //            dataType: 'json',
+        //            data: JSON.stringify({ id: UpdateItem }),
+        //            success: function (data) {
+        //                //var span = $(".countcart");
+        //                //span.html(parseInt(span.html()) + 1);
+        //                var sl = 0;
+
+        //                for (var i= 0; i < data.length;i++)
+        //        {
+        //            sl += data[i].SoLuong;
+        //        }
+        //                $("#quantity-cart").text(sl);
+        //                loadHeaderCart();
+        //                console.log(data);
+        //            },
+        //            error: function (result) {
+        //                alert(result);
+        //            }
+        //        });
+        //    });
+        //    });
+    </script>
+}
+
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="@Url.Action("Index", "TrangChu")" title="Return to Home">
+                <i class="icon-home"></i>
+            </a>
+            <span class="navigation-pipe">&gt;</span>
+            <span class="navigation-page">
+                Giỏ hàng
+            </span>
+        </div>
+    </div>
+</div>
+@if (Session["UserID"] != null)
+{
+<div class="cart-main-area">
+    <div class="container">
+        <div class="row">
+            @if (ViewBag.cartCount != 0)
+            {
+               
+                <div class="col-md-12" id="list-product-cart">
+                    <div class="entry-header">
+                        <h1 class="entry-title">Danh sách mua sắm</h1>
+                    </div>
+                    <div class="table-content">
+                        @using (Html.BeginForm("UpdateCart", "TrangChu", FormMethod.Post))
+                        {
+                             @Html.AntiForgeryToken()
+                            <div class="table-content table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="product-thumbnail">Hình ảnh</th>
+                                            <th class="product-name">Tên sản phẩm</th>
+                                            <th class="product-price">Giá</th>
+                                            <th class="product-quantity">Số lượng</th>
+                                            <th class="product-subtotal">Tổng</th>
+                                            <th class="product-remove">Xóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="td-cart">
+                                        @if (Model != null)
+                                        {
+                                            foreach (var item in Model.ChiTiet.Where(s => s.Email == (Session["UserEmail"].ToString()) && (s.idHoaDon == null)).ToList())
+                                            {
+
+                                               
+                                                   
+                                                        <script>
+                                                            var number = document.getElementById('quantity-cart');
+
+                                                             // Listen for input event on numInput.
+                                                             number.onkeydown = function (e)
+                                                             {
+                                                                 if (!((e.keyCode > 95 && e.keyCode < 106)
+                                                                     || (e.keyCode > 47 && e.keyCode < 58)
+                                                                     || e.keyCode == 8))
+                                                                 {
+                                                                     return false;
+                                                                 }
+                                                             }
+                                                        </script>
+                                                      
+                                            }
+                                                       }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="buttons-cart">
+                                        @using (Html.BeginForm("UpdateCart", "TrangChu", FormMethod.Post))
+                                        {
+                                        <input type="submit" value="Cập Nhật Giỏ Hàng">
+                                        }
+                                        <a href="~/TrangChu/Index">Tiếp tục mua sắm</a>
+                                    </div>
+                                    <!--<div class="coupon">-->
+                                    <!--<h3</h3>-->
+                                    <!--<p>Enter your coupon code if you have one.</p>-->
+                                    <!--<input type="text" placeholder="Coupon code">-->
+                                    <!--<input type="submit" value="Apply Coupon">-->
+                                    <!--</div>-->
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="cart_totals">
+                                        <h2>Tổng cộng giỏ hàng</h2>
+                                        <table class="totla-carttd">
+                                            <tbody >
+                                                <tr class="cart-subtotal">
+                                                    <th>tổng sản phẩm</th>
+                                                    <td>
+                                                        <span class="amount">@string.Format("{0:n0}", ViewBag.Total) &#x20ab</span>
+                                                    </td>
+                                                </tr>
+                                              
+                                                <tr class="order-total">
+                                                    <th>Thành tiền</th>
+                                                    <td>
+                                                        <strong>
+                                                            <span class="amount">@string.Format("{0:n0}", ViewBag.Total) &#x20ab</span>
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="wc-proceed-to-checkout">
+                                            <a href="../MuaSam/ThanhToan">Thanh Toán</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+                <div class="col-md-12" id="info-list-cart">
+                    <div class="details-cartinfo" style="    width: 100%;background: #dff0d8; color: #3c763d;text-align: center;padding: 30px;font-size: 18px; border-radius:5px;">
+                        <p>Không có sản phẩm nào trong giỏ hàng hãy trở về để mua sắm</p>
+                    </div>
+                    <div class="wc-proceed-to-checkout">
+                        <a href="../TrangChu/Index">Về mua sắm</a>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+</div>
+}

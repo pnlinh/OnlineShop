@@ -1,0 +1,271 @@
+﻿@model _24_WEB2_ASP.NET_MVC.Models.IndexViewModel
+@{
+    ViewBag.Title = "ThanhToan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css
+{
+    <head>        
+        <script type="text/javascript">
+            function addRequestVerificationToken(data) {
+                data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+                return data;
+            };
+            $(document).ready(function () {
+                //Country Dropdown Selectedchange event
+                $("#Country").change(function () {
+                    $("#State").empty();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetStates","MuaSam")', // Calling json method
+                        dataType: 'json',
+                        data: addRequestVerificationToken({ id: $("#Country").val()}),
+                        // Get Selected Country ID.
+                        success: function (states) {
+                            $.each(states, function (i, state) {
+                                $("#State").append('<option value="' + state.Value + '">' +
+                                    state.Text + '</option>');
+                            });
+                        },
+
+                    });
+                    return false;
+                })
+            });
+        </script>
+        <style>
+            .custom-form {
+                border: 1px solid #ccc;
+                color: #999;
+                display: block;
+                font-size: 14px;
+                height: 33px;
+                line-height: 16px;
+                margin-bottom: 20px;
+                padding: 0 10px 0 15px;
+                width: 100%;
+            }
+
+            .custom-select {
+                -moz-appearance: none;
+                background: #fff url(img/angle-down.png) no-repeat scroll 97% center;
+                font-weight: normal;
+                text-transform: capitalize;
+            }
+
+            .custom-select option {
+                padding: 4px 15px;
+            }
+
+            .danger {
+                color: red;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+}
+
+
+<div class="checkout-top-area">
+    <div class="container">
+        <div class="breadcrumb-area">
+            <div class="breadcrumb">
+                <a href="@Url.Action("Index", "TrangChu")" title="Return to Home">
+                    <i class="fa fa-money" aria-hidden="true"></i>
+                </a>
+                <span class="navigation-pipe">&gt;</span>
+                <span class="navigation-page">Thanh toán</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="entry-header">
+                    <h1 class="entry-title">Thanh toán</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="coupon-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="coupon-accordion">
+                    <!-- ACCORDION START -->
+                    <!-- ACCORDION END -->
+                    <!-- ACCORDION START -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.checkCount != 0)
+{
+    using (Html.BeginForm("ThanhToan", "MuaSam", FormMethod.Post))
+    {
+        var ad = Model.TaiKhoan.ThanhPho.Huyens.Where(s => s.idThanhPho == Model.TaiKhoan.ThanhPho.ID).Select(s => new { s.TenHuyen }).FirstOrDefault();
+        string add = ad.TenHuyen;
+        @Html.AntiForgeryToken()
+        <div class="checkout-area">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkbox-form">
+                            <h3>Thông tin giao hàng</h3>
+                            <p class="clear-checkout" style="background: #333;width: 30%;padding: 10px;text-align: center;color: white;font-size: 15px; cursor: pointer;">Nhập thông tin mới.</p>
+                            <script>
+                                $('.clear-checkout').click(function () {
+                                    $('.custom-form').val('');
+                                });
+                            </script>
+                            <div class="row">
+                                <div class="col-md-12">
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Họ và tên <span class="required">*</span></label>
+                                        @Html.ValidationMessageFor(m => m.ThanhToan.TenKhachHang, "", new { @class = "danger" })
+                                        @Html.TextBoxFor(m => m.ThanhToan.TenKhachHang, new { @class = "custom-form", placeholder = "Họ và tên ", @Value = Model.TaiKhoan.Name })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Địa chỉ <span class="required">*</span></label>
+                                        @Html.ValidationMessageFor(m => m.ThanhToan.DiaChi, "", new { @class = "danger" })
+                                        @Html.TextBoxFor(m => m.ThanhToan.DiaChi, new { @class = "custom-form", placeholder = "Địa chỉ giao hàng", @Value = String.Concat(Model.TaiKhoan.Address, ',', Model.TaiKhoan.Huyen.TenHuyen, ',', Model.TaiKhoan.ThanhPho.TenThanhPho) })
+                                    </div>
+                                </div>
+                                @*<div class="col-md-12">
+                                                                    <div class="checkout-form-list">
+                                                                        <label>Tỉnh/ Thành phố<span class="required">*</span></label>
+                                                                        <div>
+                                                                            @Html.ValidationMessageFor(m => m.TestOne.ID, "", new { @class = "danger" })
+                                                                        </div>
+                                                                        @Html.DropDownListFor(m => m.TestOne.ID, ViewBag.Country as SelectList, "-- Chọn tỉnh thành phố  --", new { @class = "custom-select custom-form", id = "Country", @style = "margin-top:30px" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="checkout-form-list">
+                                                                        <label>Quận/Huyện <span class="required">*</span></label>
+                                                                        <div>
+                                                                            @Html.ValidationMessageFor(m => m.TestThree.ID, "", new { @class = "danger" })
+                                                                        </div>
+                                                                        @Html.DropDownListFor(m => m.TestThree.ID, new SelectList(string.Empty, "Value", "Text"), "-- Chọn quận/huyện/thị xã. --",
+                                    new { @class = "custom-select custom-form", id = "State", @style = "margin-top:30px" })
+                                                                    </div>
+                                                                </div>*@
+
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>Địa chỉ Email<span class="required">*</span></label>
+                                        <script>
+                                            $(window).on("load", function () {
+                                                $('#email-form').val($('#email-form').val().replace(/\s/g, ""));
+                                            });
+                                        </script>
+                                        @Html.ValidationMessageFor(m => m.ThanhToan.Email, "", new { @class = "danger" })
+                                        @Html.TextBoxFor(m => m.ThanhToan.Email, new { @class = "custom-form",@id="email-form", placeholder = "Email chúng tôi có thể liên lạc", @Value = Model.TaiKhoan.Email })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>Số điện thoại<span class="required">*</span></label>
+                                        @Html.ValidationMessageFor(m => m.ThanhToan.Phone, "", new { @class = "danger" })
+                                        @Html.TextBoxFor(m => m.ThanhToan.Phone, new { @class = "custom-form", placeholder = "Số điện thoại để liên lạc", @Value = Model.TaiKhoan.Phone })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-notes">
+                                <div class="checkout-form-list">
+                                    <label>Ghi chú thêm( nếu có)</label>
+                                    @Html.TextAreaFor(model => model.ThanhToan.YeuCau, 10, 30, new { htmlAttributes = new { @class = "form-control", @rows = 10, @cols = "30", @id = "checkout-mess", @placeholder = "Hãy nhập ghi chú của bạn" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="order-button-payment">
+                                <input type="submit" name="Command2" id="submit-checkout" value="Chấp nhận thanh toán">
+                            </div>
+                        </div>
+                    </div>
+                    @if (ViewBag.error != null)
+                    {
+                        <div class="col-lg-6 col-md-6">
+                            <div class="your-order">
+                                <h3>Đơn hàng của bạn</h3>
+                                <div class="your-order-table table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Hình</th>
+                                                <th class="product-name1">Sản phẩm</th>
+                                                <th class="product-total">Giá</th>
+                                            </tr>
+                                        </thead>
+
+
+
+                                        <tbody class="cart_item_main">
+                                            @if (Model != null)
+                                            {
+                                                foreach (var item in Model.ChiTiet)
+                                                {
+
+                                                }
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <!--<tr class="cart-subtotal">
+                                                 <th>Tổng cộng đơn hàng</th>
+                                                 <td colspan="2"><span class="amount"></span></td>
+                                             </tr>
+                                            <tr class="shipping">
+                                                 <th>Shipping</th>
+                                                 <td colspan="2">
+                                                     <ul>
+                                                         <li style="text-align:center;">
+                                                             <input type="radio">
+                                                             <label>
+                                                                 Ship nhanh: <span class="amount">20.000 vnđ</span>
+                                                             </label>
+                                                         </li>
+                                                         <li>
+                                                             <input type="radio">
+                                                             <label>Ship miễn phí: 3-4 ngày</label>
+                                                         </li>
+                                                         <li></li>
+                                                     </ul>
+                                                 </td>
+                                             </tr>-->
+
+                                            <tr class="order-total"></tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div style="margin-top: 20px; font-size:17px; color:#08c;">
+                                    <p>Chúng tôi chỉ hỗ trợ nhận tiền khi giao hàng xong.</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+}
+<div class="col-md-12 " id="info-list-cart" style="position: absolute;top: 100%;">
+    <div class="details-cartinfo" style=" width:90%;margin-left:5%;background: #dff0d8; color: #3c763d;text-align: center;padding: 30px;font-size: 18px; border-radius:5px;">
+        <i class="fa fa-times-circle" aria-hidden="true"></i><p>Không có sản phẩm nào trong giỏ hàng hãy trở về để thanh toán</p>
+    </div>
+
+</div>
+
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

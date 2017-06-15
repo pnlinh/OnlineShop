@@ -1,0 +1,163 @@
+﻿@using _24_WEB2_ASP.NET_MVC.Helpers
+@model IEnumerable<_24_WEB2_ASP.NET_MVC.Models.TaiKhoan>
+
+@{
+    ViewBag.Title = "Tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section name
+{
+    Tài khoản
+    <small>Danh sách</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Tài khoản", "DanhSach", "TaiKhoan")</li>
+    <li class="active">Danh sách</li>
+}
+
+<div class="col-xs-12">
+    <div class="box">
+        <div class="box-header">
+            <div class="row" style="padding-bottom: 15px; padding-top: 10px;">
+                <div class="col-lg-6 col-md-6">
+                    
+                </div>
+
+                <div class="col-lg-6">
+                    @using (Html.BeginForm("TimKiem", "TaiKhoan", FormMethod.Get))
+                    {
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="tukhoa" name="q" placeholder="Từ khóa">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="timkiem" type="submit">Tìm kiếm</button>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Count() == 0)
+        {
+            <div class="box-body">
+                <h3 style="text-align: center;">Khách hàng bạn tìm không tồn tại !</h3>
+            </div>
+        }
+        else
+        {
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th width="5%">ID</th>
+                        <th>Họ tên</th>
+                        <th>Nơi sống</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th style="/*width: 100px;*/">Trạng thái</th>
+                        <th width="10%">Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.ID</td>
+                            <td>@item.Name</td>
+                            <td>@item.ThanhPho.TenThanhPho</td>
+                            <td>@item.Email</td>
+                            <td>@item.Phone</td>                           
+                            <td>
+                                @if (@item.BiXoa == false)
+                                {
+                                    <span class="badge bg-green">Kích hoạt</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-red">Tắt</span>
+                                    <a href="@Url.Action("KichHoat", "TaiKhoan", new { id = @item.ID })" class="btn btn-sm btn-default">Kích hoạt</a>
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Sua", "TaiKhoan", new {id = @item.ID})">
+                                    <button class="btn btn-sm btn-warning" style="margin-right: 1em;">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                </a>
+
+                                <a @if (RangBuocXoa.TheoTaiKhoan(item.ID)) { @Html.Raw("class='tat'") } onclick="return xacNhanXoa('Bạn có muốn xóa không ?')" href="@Url.Action("Xoa", "TaiKhoan", new {id = @item.ID})">
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-0">
+                        <ul class="pagination">
+                            @if (ViewBag.curPage != 1)
+                            {
+                                <li>
+                                    <a href="?q=@ViewBag.q&page=@(ViewBag.curPage - 1)">«</a>
+                                </li>
+                            }
+
+                            @for (int i = 1; i <= ViewBag.totalPage; i++)
+                            {
+                                if (ViewBag.curPage == i)
+                                {
+                                    <li class="active">
+                                        <a href="">@i</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="?q=@ViewBag.q&page=@i">@i</a>
+                                    </li>
+                                }
+                            }
+                            @if (ViewBag.curPage != ViewBag.totalPage)
+                            {
+                                <li>
+                                    <a href="?q=@ViewBag.q&page=@(ViewBag.curPage + 1)">»</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section js
+{
+    <script>
+        $(document).ready(function () {
+            $('#timkiem').click(function (e) {
+                var x = $('#tukhoa').val();
+
+                if (x == null || x === "") {
+                    alert('Bạn phải nhập từ khóa cần tìm');
+                    $('input[name="q"]').focus();
+
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

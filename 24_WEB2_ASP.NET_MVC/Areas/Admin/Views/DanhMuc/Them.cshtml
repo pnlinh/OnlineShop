@@ -1,0 +1,46 @@
+﻿@using _24_WEB2_ASP.NET_MVC.Helpers
+@model _24_WEB2_ASP.NET_MVC.Models.Danh_Muc
+
+@{
+    ViewBag.Title = "Danh Mục";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section name
+{
+    Danh mục
+    <small>Thêm</small>
+}
+
+@section path
+{
+    <li>@Html.ActionLink("Danh Mục", "DanhSach", "DanhMuc")</li>
+    <li class="active">Thêm</li>
+}
+
+
+<div class="col-md-6 col-md-offset-3">
+
+    <div class="box box-primary">
+        @using (Html.BeginForm())
+        {
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="txtTenDM">Tên danh mục</label>
+                    <input type="text" class="form-control" id="txtTenDM" name="TenDanhMuc">
+                    @Html.ValidationMessage("TenDanhMuc", "", new { @class = "text-danger" })
+                    
+                    @if (ViewBag.Loi != null)
+                    {
+                        <p id="tendanhmuc" class="text-danger">@ViewBag.Loi</p>
+                    }
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Lưu lại</button>
+                <button type="reset" class="btn btn-danger" style="margin-left: 35px;">Hủy bỏ</button>
+            </div>
+        }
+    </div>
+</div>
